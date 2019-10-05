@@ -25,7 +25,7 @@ public class OOPperson {
     Scanner sc1 = new Scanner(System.in);
     public void nhap(){
         int m;
-        System.out.println("Nhap so luong sinh vien can nhap");
+        System.out.println("Nhap so luong sinh vien can nhap 123");
         m = sc.nextInt();
         for(int i = 0; i<m; i++){
         Student newStudent = new Student();
