@@ -5,26 +5,27 @@
  */
 package oopperson;
 
+import java.io.Serializable;
 import java.util.Scanner;
 
 /**
  *
  * @author admin
  */
-public class Student extends Person {
+public class Student extends Person implements Serializable {
     Student(){super();}
     private String masv;
     private String email;
-    private Float DiemTK;
+    private String DiemTK;
 
 
-    public Student(String masv, String email, Float DiemTK) {
+    public Student(String masv, String email, String DiemTK) {
         this.masv = masv;
         this.email = email;
         this.DiemTK = DiemTK;
     }
 
-    public Student(String hovaten, String ngaysinh, String diachi, String gioitinh,Float DiemTK, String masv, String email) {
+    public Student(String hovaten, String ngaysinh, String diachi, String gioitinh,String DiemTK, String masv, String email) {
         super(hovaten, ngaysinh, diachi, gioitinh);
         this.masv = masv;
         this.email = email;
@@ -47,11 +48,11 @@ public class Student extends Person {
         this.email = email;
     }
 
-    public Float getDiemTK() {
+    public String getDiemTK() {
         return DiemTK;
     }
 
-    public void setDiemTK(Float DiemTK) {
+    public void setDiemTK(String DiemTK) {
         this.DiemTK = DiemTK;
     }
 
@@ -79,13 +80,12 @@ public void nhapthongtinsinhvien(){;
     System.out.println("Nhap email ");
     this.email = sc.nextLine();
     System.out.println("Nhap diem tong ket");
-    this.DiemTK = sc.nextFloat();
+    this.DiemTK = sc.nextLine();
 }
 public void xuatthongtinsinhvien(){
     this.xuatthongtin();
     System.out.println("Ma cua sinh vien"+masv+"\nEmail :"+email+"\nDiem tong ket:"+DiemTK);
 }
-
 
     
 }
