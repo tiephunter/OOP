@@ -1,0 +1,9 @@
+1$cao$tiep$1$04021999
+2$nguyen$dung$1$2321994
+3$tran$khai$1$123199
+4$cao$viet$2$17021993
+5$nguyen$nguyet$3$02120
+6$tran$huyen$3$02120
+7$dang$huong$3$02120
+8$tran$dang$2$02
+9$nguyen$khoi$1$020105

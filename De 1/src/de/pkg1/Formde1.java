@@ -243,7 +243,7 @@ public class Formde1 extends javax.swing.JFrame {
                 Student st = new Student(tfHoten.getText(),tfDiachi.getText(),tfNgaySinh.getText(),nam.isSelected()?"nam":"nu",
                         tfmaSV.getText(),tfemail.getText(),Float.parseFloat(tfDTK.getText()));
                 String $ = null;
-                bw.append(st.HoTen+"$"+st.DiaChi+"$"+st.NgaySinh+"$"+st.Gioitinh+"$"+st.getMaSV()+"$"+st.getEmail()+$+st.getDTK());
+                bw.append(st.HoTen+"$"+st.DiaChi+"$"+st.NgaySinh+"$"+st.Gioitinh+"$"+st.getMaSV()+"$"+st.getEmail()+"$"+st.getDTK());
                 bw.newLine();
                 bw.close();
                 fw.close();
