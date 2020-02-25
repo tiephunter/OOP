@@ -37,7 +37,8 @@ public class TestSwing {
      */
     public static void main(String[] args) {
         // TODO code application logic here
-        JFrame frame = new JFrame("Hello World");
+        JFrame frame = new JFrame("gô"
+                + "");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(350, 550);
         frame.setLocationRelativeTo(null);

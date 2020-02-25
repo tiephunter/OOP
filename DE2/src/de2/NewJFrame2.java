@@ -271,7 +271,7 @@ public class NewJFrame2 extends javax.swing.JFrame {
         });
     }
     public boolean Kiemtrarong(){
-        if(tfhoten.getText().equals(" ")||tfngaysinh.getText().equals("")||tfdiachi.getText().equals("")||(!nam.isSelected()&&!nu.isSelected())||tfdiemquatrinh.getText().equals("")||tfdiemhocphan.getText().equals("")){
+        if(tfhoten.getText().equals("")||tfngaysinh.getText().equals("")||tfdiachi.getText().equals("")||(!nam.isSelected()&&!nu.isSelected())||tfdiemquatrinh.getText().equals("")||tfdiemhocphan.getText().equals("")){
             return true;
         }
         return false;
