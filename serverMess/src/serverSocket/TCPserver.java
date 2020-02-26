@@ -21,7 +21,15 @@ import java.sql.Statement;
  */
 public class TCPserver {
     
-    
+    private static String TenTaiKhoan = null;
+    private static String MatKhau = null;
+    private static String HoTen = null;
+    private static String NgaySinh = null;
+    private static int GioiTinh ;
+    private static String DiaChi = null;
+    private static String QueQuan = null;
+    private static String Email = null;
+    private static Connection conn = null;
     private static String DB_URL = "jdbc:sqlserver://localhost:1433;"
             + "databaseName=Messenger;"
             + "integratedSecurity=true";
@@ -29,12 +37,14 @@ public class TCPserver {
     private static String PASSWORD = "sa";
     
     
-     public static Connection getConnection(String dbURL, String userName, String password) throws Exception {
+     public static void connectToDB(String dbURL, String userName, String password) {
         System.out.println("getConnection");
-        Connection conn = null;
-        conn = DriverManager.getConnection(DB_URL, USER_NAME, PASSWORD);
-        System.out.println("connect successfully!");
-        return conn;
+         try {
+            conn = DriverManager.getConnection(DB_URL, USER_NAME, PASSWORD);
+            System.out.println("connect successfully!");
+         } catch (Exception e) {
+            e.printStackTrace();
+         }
     }
     /**
      * @param args the command line arguments
@@ -42,6 +52,8 @@ public class TCPserver {
     //cài đặt socket, serverSocket và luồng vào ra
     final static int SIGNUP_ACTION = 1;
     final static int LOGIN_ACTION = 2;
+    final static int LOGIN_SUCCESS = 3;
+    final static int LOGIN_FALSE = 4;
     
     private static Socket clientSocket = null;
     private static ServerSocket myServer = null;
@@ -51,10 +63,16 @@ public class TCPserver {
     //mo server Socket
     public static void openServer(){
         try{
-            myServer = new ServerSocket(1234);
+            myServer = new ServerSocket(1233);
         }catch(IOException e ){
             System.err.println(e);
         }
+    }
+    public static boolean testEmty(){
+        if(TenTaiKhoan.equals("")||MatKhau.equals("")||HoTen.equals("")||NgaySinh.equals("")||DiaChi.equals("")||QueQuan.equals("")||Email.equals("")){
+            return true;       
+        }
+        return false; 
     }
 
     //chap nhan ket noi va xu ly du lieu
@@ -74,19 +92,21 @@ public class TCPserver {
             while (true) {
                 //read messenge from client
                 if(in.available() > 0) {
-                    System.out.println("get a package");
+                    System.out.println("Got a package");
+                    
                     int action = in.readInt();
+                    
                     switch(action){
                         case SIGNUP_ACTION:
                             System.out.println("go to singup action");
-                            String TenTaiKhoan = in.readUTF();
-                            String MatKhau = in.readUTF();
-                            String HoTen = in.readUTF();
-                            String NgaySinh = in.readUTF();
-                            int GioiTinh = in.readInt();
-                            String DiaChi = in.readUTF();
-                            String QueQuan = in.readUTF();
-                            String Email = in.readUTF();
+                            TenTaiKhoan = in.readUTF();
+                            MatKhau = in.readUTF();
+                            HoTen = in.readUTF();
+                            NgaySinh = in.readUTF();
+                            GioiTinh = in.readInt();
+                            DiaChi = in.readUTF();
+                            QueQuan = in.readUTF();
+                            Email = in.readUTF();
                             System.out.println(TenTaiKhoan);
                             System.out.println(MatKhau);
                             System.out.println(HoTen);
@@ -95,11 +115,60 @@ public class TCPserver {
                             System.out.println(DiaChi);
                             System.out.println(QueQuan);
                             System.out.println(Email);
+                            // crate statement
+                            if(testEmty()==true){
+                                out.writeUTF("Bạn chưa điền đầy đủ thông tin");
+                                out.flush();
+                                return;
+                            }
+                            else{
+                            Statement stmt = conn.createStatement();
+                            // insert data to table
+                            stmt.execute("INSERT INTO Users(HoTen,NgaySinh,GioiTinh,DiaChi,QueQuan,Email,TenTaiKhoan,MatKhau)"
+                                + " values(N'"+HoTen+"',N'"+NgaySinh+"',"+GioiTinh+",N'"+DiaChi+"',N'"+QueQuan+"',N'"+Email+"',N'"+TenTaiKhoan+"',N'"+MatKhau+"')");
+//                            ResultSet rs1 = stmt.executeQuery("Select * from User");
+//                            System.out.println(rs1.getRow());
+                            out.writeUTF("Đăng kí thành công");
+                            out.flush();  
+                            }
                             break;
+                        case LOGIN_ACTION:
+                            TenTaiKhoan = in.readUTF();
+                            MatKhau = in.readUTF();
+                            Statement stmt = conn.createStatement();
+                            ResultSet rs = stmt.executeQuery("select *\n" +
+                                                            "from Users\n"
+                                                            + "where TenTaiKhoan = N'"+TenTaiKhoan+"' and MatKhau = N'"+MatKhau+"'");
+                                if (rs.next()) {
+                                System.out.println(rs.getString(1) + "  " + rs.getString(2)+ "  "+rs.getString(3)+ "  "+rs.getInt(4)+ "  " +rs.getString(5)+ "  "+rs.getString(6)+ "  "+rs.getString(7)+ "  "+rs.getString(8)+ "  "+rs.getString(9));
+                                out.writeInt(LOGIN_SUCCESS);
+                                out.writeInt(rs.getInt(1));
+                                out.writeUTF(rs.getString(2));
+                                out.writeUTF(rs.getString(3));
+                                out.writeInt(rs.getInt(4));
+                                out.writeUTF(rs.getString(5));
+                                out.writeUTF(rs.getString(6));
+                                out.writeUTF(rs.getString(7));
+                                out.writeUTF(rs.getString(8));
+                                out.writeUTF(rs.getString(9));
+                                
+                                out.flush();
+                                }
+                            
+                            else {
+                                System.out.println("kkkldsak");
+                                    System.out.println("outtttttttttttttttttttttttttttttttttttttttt");
+                                out.writeInt(LOGIN_FALSE);
+                                out.flush();
+                            }
+                            
+                            
+                        break;
                     }
                 }
-
+            
             } 
+            
             
             
         } catch (Exception e) {
@@ -113,32 +182,19 @@ public class TCPserver {
             
     public static void main(String[] args) {
         // TODO code application logic here
-        try {
-            // connnect to database 'Messenger'
-            System.out.println("3");
-
-            Connection conn = getConnection(DB_URL, USER_NAME, PASSWORD);
-            // crate statement
-            System.out.println("2");
-            Statement stmt = conn.createStatement();
-            
-            System.out.println("2");
-
-            // get data from table 'student'
-            ResultSet rs = stmt.executeQuery("insert into User (HoTen,NgaySinh,GioiTinh,DiaChi,QueQuan,Email,TenTaiKhoan,MatKhau) "
-                    + "values(N'HoTen',N'NgaySinh',GioiTinh,N'DiaChi',N'QueQuan',N'Email',N'TenTaiKhoan',N'MatKhau')");
-            // show data
-//            System.out.println("3");
+        TCPserver.connectToDB(DB_URL, USER_NAME, PASSWORD);
+//        try {
+//            Statement stmt = conn.createStatement();
+//            ResultSet rs = stmt.executeQuery("SELECT * FROM Users");
 //            while (rs.next()) {
-//                System.out.println(rs.getInt(1) + "  " + rs.getString(2) 
+//                System.out.println(rs.getString(1) + "  " + rs.getString(2) 
 //                        + "  " + rs.getString(3)+rs.getInt(4));
 //            }
-            // close connection
-            conn.close();
-        } catch (Exception e) {
-            System.out.println("aaassd");
-            e.printStackTrace();
-        }
+//         
+//        } catch(Exception e) {
+//            e.printStackTrace();
+//        }
+        
         TCPserver.openServer();
         TCPserver.listening(1234);
     }

@@ -10,6 +10,7 @@ import java.net.Socket;
 import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -23,8 +24,10 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 
 /**
@@ -38,8 +41,10 @@ import javax.swing.border.EmptyBorder;
 public class AppMessenger {
     
     final static int SIGNUP_ACTION = 1;
-    final static int SIGNIN_ACTION = 2;
-            
+    final static int LOGIN_ACTION = 2;
+    final static int LOGIN_SUCCESS = 3;
+    final static int LOGIN_FALSE = 4;
+    
     private static Socket mySocket = null;
     private static DataInputStream in = null;
     private static DataOutputStream osx = null;
@@ -47,7 +52,7 @@ public class AppMessenger {
 
     public static void connection(){
         try {
-            mySocket = new Socket("localhost", 1234);
+            mySocket = new Socket("localhost", 1233);
             in = new DataInputStream(mySocket.getInputStream());
             osx = new DataOutputStream(mySocket.getOutputStream());
             
@@ -64,12 +69,86 @@ public class AppMessenger {
         // TODO code application logic here
         
         AppMessenger.connection();
-        JFrame frameMenu = new JFrame("Form Đăng kí");
-        frameMenu.setSize(400, 600);
-        frameMenu.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frameMenu.setLocationRelativeTo(frameMenu);
-        frameMenu.setResizable(true);
-        frameMenu.getContentPane().setBackground(Color.orange);
+        JFrame frameLogIn= new JFrame("OrangeMESS");
+        frameLogIn.setSize(350, 350);
+        frameLogIn.setLocationRelativeTo(frameLogIn);
+        frameLogIn.setResizable(true);
+        frameLogIn.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frameLogIn.setBackground(Color.gray);
+        
+        //set panelDangNhap 
+        JPanel panleLogIn = new JPanel();
+        
+        //set label, textfield and button
+        JLabel labelOrangeMess = new JLabel("                  ORANGE--MESS             ",JLabel.CENTER);
+        labelOrangeMess.setBackground(Color.orange);
+        JLabel labelTenTaiKhoan = new JLabel("Accout",JLabel.LEFT);
+        JLabel labelMatKhau = new JLabel("Password",JLabel.LEFT);
+        
+        JTextField tfTenTaiKhoan = new JTextField("",JTextField.LEFT);
+        JTextField tfMatKhau = new JTextField("",JTextField.LEFT);
+        
+        JButton btnLogIn = new JButton("Đăng Nhập");
+        btnLogIn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    osx.writeInt(LOGIN_ACTION);
+                    osx.writeUTF(tfTenTaiKhoan.getText());
+                    osx.writeUTF(tfMatKhau.getText());
+                    osx.flush();
+                    int result = in.readInt();
+                    if(result==LOGIN_SUCCESS){
+                        int id = in.readInt();
+                        String HoTen = in.readUTF();
+                        String NgaySinh = in.readUTF();
+                        int GioiTinh = in.readInt();
+                        String DiaChi = in.readUTF();
+                        String QueQuan = in.readUTF();
+                        String Email = in.readUTF();
+                        String TenTaiKhoan = in.readUTF();
+                        String MatKhau = in.readUTF();
+                        System.out.println(id+"  "+HoTen+" "+NgaySinh+" "+GioiTinh+" "+DiaChi+" "+QueQuan+" "+Email+" "+TenTaiKhoan+" "+MatKhau);
+                        JOptionPane.showMessageDialog(null, "Đăng Nhập Thành Công");
+                        JFrame frameHome = new JFrame("HOME");
+                        frameHome.setSize(400,600);
+                        frameHome.setLocationRelativeTo(frameHome);
+                        frameHome.setResizable(true);
+                        frameHome.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                        
+                        
+                        frameLogIn.setVisible(false);
+                        frameHome.setVisible(true);
+                        
+                    }
+                    else if (result == LOGIN_FALSE){
+                         JOptionPane.showMessageDialog(null,"Nhập sai tài khoản hoặc mật khẩu");
+                         tfTenTaiKhoan.setText("");
+                         tfMatKhau.setText("");
+                    }
+                    
+                } catch (Exception e2) {
+                    JOptionPane.showMessageDialog(null,"cath Nhập sai tài khoản hoặc mật khẩu");
+                    System.out.println("Nhập lại đeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
+                    System.out.println("loi day");
+                    System.out.println(e2);
+                }
+                
+            }
+        });
+        
+  
+        JButton btnSignUp = new JButton("Đăng Kí");
+        btnSignUp.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                
+        JFrame frameDangKy = new JFrame("Form Đăng kí");
+        frameDangKy.setSize(400, 600);
+        frameDangKy.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frameDangKy.setLocationRelativeTo(null);
+        frameDangKy.setResizable(true);
+        frameDangKy.getContentPane().setBackground(Color.orange);
         
         //set layout for panel profile
         //set Layout for body
@@ -136,6 +215,9 @@ public class AppMessenger {
                         osx.writeUTF(tfQueQuan.getText());
                         osx.writeUTF(tfEmail.getText());
                         osx.flush();
+                        String input = in.readUTF();
+                        System.out.println(input);
+                        JOptionPane.showMessageDialog(null, input);
                         
                 } catch (IOException e1) {
                     System.err.println(e1);
@@ -152,6 +234,13 @@ public class AppMessenger {
         btnBack.setBackground(Color.black);
         btnBack.setForeground(Color.white);
         btnBack.setFocusPainted(false);
+        btnBack.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                frameDangKy.setVisible(false);
+                frameLogIn.setVisible(true);
+            }
+        });
         //panelPrf add label and textfield
         panelPrf.add(labelPrf);
         panelPrf.add(labelhr);
@@ -178,9 +267,32 @@ public class AppMessenger {
        //set Layout for panel
         panelPrf.setLayout(new BoxLayout(panelPrf, BoxLayout.Y_AXIS));
         //frame add content
-        frameMenu.setLayout(new GridLayout(1,1));
-        frameMenu.add(panelBody);
-        frameMenu.setVisible(true);
+        frameDangKy.setLayout(new GridLayout(1,1));
+        frameDangKy.add(panelBody);
+        frameDangKy.setVisible(true);
+                
+            }
+        });
+        
+        //add component to panel
+        
+        panleLogIn.add(labelOrangeMess);
+        panleLogIn.add(labelTenTaiKhoan);
+        panleLogIn.add(tfTenTaiKhoan);
+        panleLogIn.add(labelMatKhau);
+        panleLogIn.add(tfMatKhau);
+        panleLogIn.add(btnLogIn);
+        panleLogIn.add(btnSignUp);
+        
+        //set Layout for panel;
+        panleLogIn.setLayout(new BoxLayout(panleLogIn, BoxLayout.Y_AXIS));
+        panleLogIn.setBorder(new EmptyBorder(50, 50, 100, 70));
+        panleLogIn.setBackground(Color.GRAY);
+        
+        //add to Frame
+        frameLogIn.setLayout(new GridLayout(1,1));
+        frameLogIn.add(panleLogIn);
+        frameLogIn.setVisible(true);
     }
     
 }
