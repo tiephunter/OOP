@@ -12,6 +12,9 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.sql.Time;
+import java.time.LocalTime;
+import java.time.ZoneId;
 
 
 
@@ -54,6 +57,8 @@ public class TCPserver {
     final static int LOGIN_ACTION = 2;
     final static int LOGIN_SUCCESS = 3;
     final static int LOGIN_FALSE = 4;
+    final static int SEARCH_ACTION = 5;
+    final static int FRIENDADDREQUEST_ACTION = 6;
     
     private static Socket clientSocket = null;
     private static ServerSocket myServer = null;
@@ -139,6 +144,7 @@ public class TCPserver {
                             ResultSet rs = stmt.executeQuery("select *\n" +
                                                             "from Users\n"
                                                             + "where TenTaiKhoan = N'"+TenTaiKhoan+"' and MatKhau = N'"+MatKhau+"'");
+                                System.out.println("Login by"+TenTaiKhoan);
                                 if (rs.next()) {
                                 System.out.println(rs.getString(1) + "  " + rs.getString(2)+ "  "+rs.getString(3)+ "  "+rs.getInt(4)+ "  " +rs.getString(5)+ "  "+rs.getString(6)+ "  "+rs.getString(7)+ "  "+rs.getString(8)+ "  "+rs.getString(9));
                                 out.writeInt(LOGIN_SUCCESS);
@@ -151,22 +157,88 @@ public class TCPserver {
                                 out.writeUTF(rs.getString(7));
                                 out.writeUTF(rs.getString(8));
                                 out.writeUTF(rs.getString(9));
-                                
                                 out.flush();
                                 }
                             
                             else {
-                                System.out.println("kkkldsak");
-                                    System.out.println("outtttttttttttttttttttttttttttttttttttttttt");
                                 out.writeInt(LOGIN_FALSE);
                                 out.flush();
                             }
                             
                             
                         break;
+                        
+                        case SEARCH_ACTION:
+                            String tfSearch = in.readUTF();
+                            
+                            Statement stmtSearch = conn.createStatement();
+                            
+                            Statement stmtAmount = conn.createStatement();
+                            
+                            ResultSet rsSearch = stmtSearch.executeQuery("SELECT *\n"
+                                                                        + "from Users \n"
+                                                                        + "where TenTaiKhoan like N'%"+tfSearch+"%'");
+
+                            ResultSet rsAmount = stmtAmount.executeQuery("SELECT COUNT(*)\n"
+                                                                        + "from Users \n"
+                                                                        + "where TenTaiKhoan like N'%"+tfSearch+"%'");
+//                            long countLong = rsAmount.getLong(1);
+//                            //if you really want and you are sure that it fits you can now cast
+//                            int count = (int)countLong; 
+//                            System.out.println(count);
+                            
+                            
+                                while (rsSearch.next()) {
+//                                    if(rsSearch.wasNull()){
+//                                        System.out.println("ko tìm thấy");
+//                                    }
+//                                    else{
+                                    System.out.println(rsSearch.getInt(1)+""+rsSearch.getString(2)+""+rsSearch.getString(8)); 
+                                    out.writeInt(SEARCH_ACTION);
+                                    while(rsAmount.next()){
+                                    out.writeInt(rsAmount.getInt(1));
+                                    }
+                                    out.writeInt(rsSearch.getInt(1));
+                                    out.writeUTF(rsSearch.getString(2));
+                                    out.writeUTF(rsSearch.getString(3));
+                                    out.writeInt(rsSearch.getInt(4));
+                                    out.writeUTF(rsSearch.getString(5));
+                                    out.writeUTF(rsSearch.getString(6));
+                                    out.writeUTF(rsSearch.getString(7));
+                                    out.writeUTF(rsSearch.getString(8));                                                                                                           
+                                    out.flush();
+//                                    }
+                                    
+                                }
+                            
+                            break ;
+                            
+                            
+                        case FRIENDADDREQUEST_ACTION :
+                            System.out.println("Friend Action");
+                            int idUser = in.readInt();
+                            int idFriend = in.readInt();
+                            
+                            // insert into friendShip
+                            LocalTime TimeCreated = LocalTime.now(ZoneId.of("Asia/Ho_Chi_Minh"));
+                            Statement stmtAddFriend = conn.createStatement();
+                            stmtAddFriend.execute("INSERT INTO FriendShip(UserId,FriendId,TimeCreated)"
+                                          + "Values("+idUser+","+idFriend+",'"+TimeCreated+"')");  
+                            
+//                            //insert into Seesion
+//                            LocalTime TimeStart = LocalTime.now();
+//                            LocalTime TimeFinish = LocalTime.now();
+//                            Statement stmtAddSeesion = conn.createStatement();
+//                            stmtAddSeesion.execute("INSERT INTO Seesion(AmountUsers,TimeStart,TimeFinish)"
+//                                                +  "Values(2,"+TimeStart+","+ TimeFinish+")");
+//                            
+
+                            
+                            
+                            break;
                     }
                 }
-            
+                
             } 
             
             
