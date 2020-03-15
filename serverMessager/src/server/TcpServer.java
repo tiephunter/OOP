@@ -5,8 +5,6 @@
  */
 package server;
 
-import com.sun.org.apache.xml.internal.security.c14n.implementations.UtfHelpper;
-
 import java.net.Socket;
 import java.net.*;
 import java.io.*;
@@ -18,7 +16,6 @@ import java.sql.Statement;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.HashMap;
-import java.util.Set;
 
 
 /**
@@ -103,16 +100,18 @@ class HandleClientThread extends Thread {
     final static int LOGIN_ACTION = 2;
     final static int LOGIN_SUCCESS = 3;
     final static int LOGIN_FALSE = 4;
-    final static int SEARCH_ACTION = 5;
+    final static int LOAD_USER_lIST_ACTION = 5;
     final static int ADD_FRIEND_ACTION = 6;
-    final static int SEARCH_ACTION_SUCCESS = 8;
-    final static int SEARCH_ACTION_FAIL = 9;
+    final static int ADD_FRIEND_SUCCESS = 8;
+    final static int ADD_FRIEND_FAIL = 9;
     final static int LOAD_FRIEND_LIST_ACTION = 7;
     final static int CHAT_ACTION = 10;
     final static int CHAT_ACTION_SUCCESS = 11;
     final static int CHAT_ACTION_FAIL = 12;
     final static int SEND_MESSAGE_ACTION = 13;
-    final static int RECEIVED_MESSENGER_SUCCESS = 14;
+    final static int RECEIVED_MESSAGE_ACTION = 14;
+    final static int RECEIVED_MESSENGER_NOW = 15;
+    final static int RECEIVED_MESSENGER_LATER = 16;
 
     private static String TenTaiKhoan = null;
     private static String MatKhau = null;
@@ -155,7 +154,8 @@ class HandleClientThread extends Thread {
         System.out.println(Email);
         // crate statement
         if (testEmty() == true) {
-            out.writeUTF("Báº¡n chÆ°a Ä‘iá»�n Ä‘áº§y Ä‘á»§ thÃ´ng tin");
+            out.writeInt(SIGN_UP_ACTION);
+            out.writeUTF("Bạn chưa nhập đầy đủ thông tin !!!");
             out.flush();
             return;
         } else {
@@ -163,7 +163,8 @@ class HandleClientThread extends Thread {
             // insert data to table
             stmt.execute("INSERT INTO Users(HoTen,NgaySinh,GioiTinh,DiaChi,QueQuan,Email,TenTaiKhoan,MatKhau)"
                     + " values(N'" + HoTen + "',N'" + NgaySinh + "'," + GioiTinh + ",N'" + DiaChi + "',N'" + QueQuan + "',N'" + Email + "',N'" + TenTaiKhoan + "',N'" + MatKhau + "')");
-            out.writeUTF("Ä�Äƒng kÃ­ thÃ nh cÃ´ng");
+            out.writeInt(SIGN_UP_ACTION);
+            out.writeUTF("Đăng Kí Thàng Công");
             out.flush();
         }
     }
@@ -178,6 +179,7 @@ class HandleClientThread extends Thread {
         System.out.println("Login by" + TenTaiKhoan);
         if (rs.next()) {
             System.out.println(rs.getString(1) + "  " + rs.getString(2) + "  " + rs.getString(3) + "  " + rs.getInt(4) + "  " + rs.getString(5) + "  " + rs.getString(6) + "  " + rs.getString(7) + "  " + rs.getString(8) + "  " + rs.getString(9));
+            out.writeInt(LOGIN_ACTION);
             out.writeInt(LOGIN_SUCCESS);
             out.writeInt(rs.getInt(1));
             out.writeUTF(rs.getString(2));
@@ -192,12 +194,14 @@ class HandleClientThread extends Thread {
             TcpServer.clientHashMap.put(rs.getInt(1),clientSocket);
             System.out.println("HashMap"+TcpServer.clientHashMap);
         } else {
+            out.writeInt(LOGIN_ACTION);
             out.writeInt(LOGIN_FALSE);
             out.flush();
         }
     }
 
     public void handleSearchUserList() throws Exception {
+        int idUser = in.readInt();
         String tfSearch = in.readUTF();
 
         Statement stmtSearch = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
@@ -215,6 +219,7 @@ class HandleClientThread extends Thread {
 //                                System.out.println(rsAmount.);
 //                            }
         rsSearch.last();
+        out.writeInt(LOAD_USER_lIST_ACTION);
         out.writeInt(rsSearch.getRow());
         rsSearch.beforeFirst();
         while (rsSearch.next()) {
@@ -235,29 +240,46 @@ class HandleClientThread extends Thread {
         int idUser = in.readInt();
         int idFriend = in.readInt();
 
-        // insert into friendShip
-        LocalTime TimeCreated = LocalTime.now(ZoneId.of("Asia/Ho_Chi_Minh"));
-        Statement stmtAddFriend = conn.createStatement();
-        stmtAddFriend.execute("INSERT INTO FriendShip(UserId,FriendId,TimeCreated)"
-                + "Values(" + idUser + "," + idFriend + ",'" + TimeCreated + "')");
+        Statement stmtCheckFriend = conn.createStatement();
+        ResultSet rsCheckFriend =  stmtCheckFriend.executeQuery("select * \n" +
+                                                                    "from FriendShip " +
+                                                                    "where UserId = "+idUser+" and FriendId = "+idFriend );
+        if(rsCheckFriend.next()){
+            out.writeInt(ADD_FRIEND_ACTION);
+            out.writeInt(ADD_FRIEND_FAIL);
+            out.flush();
+        }
+        else{
+            // insert into friendShip
+            LocalTime TimeCreated = LocalTime.now(ZoneId.of("Asia/Ho_Chi_Minh"));
+            Statement stmtAddFriend = conn.createStatement();
+            stmtAddFriend.execute("INSERT INTO FriendShip(UserId,FriendId,TimeCreated)"
+                    + "Values(" + idUser + "," + idFriend + ",'" + TimeCreated + "')");
 
-        Statement stmtAddFriend1 = conn.createStatement();
-        stmtAddFriend1.execute("INSERT INTO FriendShip(UserId,FriendId,TimeCreated)"
-                + "Values(" + idFriend + "," + idUser + ",'" + TimeCreated + "')");
+            Statement stmtAddFriend1 = conn.createStatement();
+            stmtAddFriend1.execute("INSERT INTO FriendShip(UserId,FriendId,TimeCreated)"
+                    + "Values(" + idFriend + "," + idUser + ",'" + TimeCreated + "')");
+            out.writeInt(ADD_FRIEND_ACTION);
+            out.writeInt(ADD_FRIEND_SUCCESS);
+            out.flush();
+        }
     }
 
     public void handleLoadFriendList() throws Exception {
-        int nameFriend = in.readInt();
+        int idUser = in.readInt();
         Statement stmtSearchNameFriend = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+
         ResultSet rsSearchNameFriend = stmtSearchNameFriend.executeQuery("select Users.IdUser, Users.TenTaiKhoan, Users.HoTen \n"
                 + "from FriendShip, Users\n"
                 + " where\n"
-                + "FriendShip.UserId = " + nameFriend + "\n"
-                + "and FriendShip.FriendId = Users.IdUser");
+                + "FriendShip.UserId = " + idUser + "\n"
+                + "and FriendShip.FriendId = Users.IdUser" );
 
         rsSearchNameFriend.last();
         rsSearchNameFriend.getRow();
+        out.writeInt(LOAD_FRIEND_LIST_ACTION);
         out.writeInt(rsSearchNameFriend.getRow());
+        System.out.println("Number of Friend " + rsSearchNameFriend.getRow());
         rsSearchNameFriend.beforeFirst();
 //                            ArrayList<Friends> friendList = new ArrayList<>();
         while (rsSearchNameFriend.next()) {
@@ -268,11 +290,6 @@ class HandleClientThread extends Thread {
             out.writeInt(rsSearchNameFriend.getInt(1));
             out.writeUTF(rsSearchNameFriend.getString(2));
             out.writeUTF(rsSearchNameFriend.getString(3));
-//                                out.writeInt(rsSearchNameFriend.getInt(4));
-//                                out.writeUTF(rsSearchNameFriend.getString(5));
-//                                out.writeUTF(rsSearchNameFriend.getString(6));
-//                                out.writeUTF(rsSearchNameFriend.getString(7));
-//                                out.writeUTF(rsSearchNameFriend.getString(8));
         }
         out.flush();
     }
@@ -304,32 +321,38 @@ class HandleClientThread extends Thread {
                     stmt.execute("update FriendShip set sessionId = " + sessionId + " where UserId = " + idUser + " and FriendId = " + idFriend);
                     stmt.execute("update FriendShip set sessionId = " + sessionId + " where UserId = " + idFriend + " and FriendId = " + idUser);
                 }
+                out.writeInt(CHAT_ACTION);
                 out.writeInt(CHAT_ACTION_SUCCESS);
+                out.writeInt(idUser);
+                out.writeInt(idFriend);
                 out.writeInt(sessionId);
                 out.writeInt(0);
                 out.flush();
             } else {
-               out.writeInt(CHAT_ACTION_SUCCESS);
-               out.writeInt(sessionId);
-               Statement loadMessageStmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-               ResultSet loadMessageRs = loadMessageStmt.executeQuery("select * from Message where IdSession = " + sessionId);
-               loadMessageRs.last();
-               out.writeInt(loadMessageRs.getRow());
-               loadMessageRs.beforeFirst();
-               while (loadMessageRs.next()) {
-                   out.writeInt(loadMessageRs.getInt(1));
-                   out.writeUTF(loadMessageRs.getString(2));
-//                   out.writeFloat(loadMessageRs.getTime(4));
-                   out.writeInt((loadMessageRs.getInt(5)));
-               }
-               out.flush();
+                   out.writeInt(CHAT_ACTION);
+                   out.writeInt(CHAT_ACTION_SUCCESS);
+                   out.writeInt(idUser);
+                   out.writeInt(idFriend);
+                   out.writeInt(sessionId);
+                   Statement loadMessageStmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+                   ResultSet loadMessageRs = loadMessageStmt.executeQuery("select * from Message where IdSession = " + sessionId);
+                   loadMessageRs.last();
+                   out.writeInt(loadMessageRs.getRow());
+                   loadMessageRs.beforeFirst();
+                   while (loadMessageRs.next()) {
+                       out.writeInt(loadMessageRs.getInt(1));
+                       out.writeUTF(loadMessageRs.getString(2));
+            //                   out.writeFloat(loadMessageRs.getTime(4));
+                       out.writeInt((loadMessageRs.getInt(5)));
+                   }
+                   out.flush();
             }
         }
 
     }
 
-    public void handleRecivedMsg () throws Exception {
-        int idSeesion = in.readInt();
+    public void handleReceivedMsg() throws Exception {
+        int idSession = in.readInt();
         String tfInputMsg = in.readUTF();
         int idUser = in.readInt();
         int idFriend = in.readInt();
@@ -339,24 +362,20 @@ class HandleClientThread extends Thread {
         //
         LocalTime TimeStart = LocalTime.now(ZoneId.of("Asia/Ho_Chi_Minh"));
         PreparedStatement stmt = conn.prepareStatement("insert into Message(TextMess,IdSession,Time,IdSender) "
-                    + "values(N'"+tfInputMsg+"',"+idSeesion+",'"+TimeStart+"',"+idUser+")",Statement.RETURN_GENERATED_KEYS);
+                    + "values(N'"+tfInputMsg+"',"+idSession+",'"+TimeStart+"',"+idUser+")",Statement.RETURN_GENERATED_KEYS);
 
         stmt.execute();
         ResultSet rs = stmt.getGeneratedKeys();
-        if(rs.next()){
-            out.writeInt(RECEIVED_MESSENGER_SUCCESS);
-            out.writeInt(rs.getInt(1));
-            out.writeInt(idSeesion);
-            out.writeInt(idUser);
-            out.writeUTF(tfInputMsg);
+        System.out.println("detect success 1");
+        while(rs.next()){
             if(testIdFriend == true){
-                System.out.println("detect success");
+                System.out.println("detect success 2");
                 Socket friendSocket = TcpServer.clientHashMap.get(idFriend);
                 DataOutputStream friendOut = new DataOutputStream(friendSocket.getOutputStream());
-
-                friendOut.writeInt(RECEIVED_MESSENGER_SUCCESS);
+                friendOut.writeInt(RECEIVED_MESSAGE_ACTION);
+                friendOut.writeInt(RECEIVED_MESSENGER_NOW);
                 friendOut.writeInt(rs.getInt(1));
-                friendOut.writeInt(idSeesion);
+                friendOut.writeInt(idSession);
                 friendOut.writeInt(idUser);
                 friendOut.writeUTF(tfInputMsg);
             }
@@ -392,10 +411,9 @@ class HandleClientThread extends Thread {
                         case LOGIN_ACTION:
                             System.out.println("go to login action");
                             handleLogin();
-
                             break;
 
-                        case SEARCH_ACTION:
+                        case LOAD_USER_lIST_ACTION:
                             System.out.println("go to search user action");
                             handleSearchUserList();
                             break;
@@ -414,9 +432,10 @@ class HandleClientThread extends Thread {
                             System.out.println("go to chat Action");
                             handleChat();
                             break;
+
                         case SEND_MESSAGE_ACTION:
                             System.out.println("go to recived Message Action");
-                            handleRecivedMsg();
+                            handleReceivedMsg();
                             break;
                     }
                 }
