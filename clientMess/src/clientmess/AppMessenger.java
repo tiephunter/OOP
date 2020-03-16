@@ -7,6 +7,7 @@ package clientmess;
 
 import java.awt.BorderLayout;
 
+import java.io.OutputStream;
 import java.net.Socket;
 
 import java.awt.Color;
@@ -37,7 +38,7 @@ public class AppMessenger {
     final static int ADD_FRIEND_ACTION = 6;
     final static int ADD_FRIEND_SUCCESS = 8;
     final static int ADD_FRIEND_FAIL = 9;
-    final static int LOAD_FRIEND_LIST_ACTION = 7;
+    public final static int LOAD_FRIEND_LIST_ACTION = 7;
     final static int CHAT_ACTION = 10;
     final static int CHAT_ACTION_SUCESS = 11;
     final static int CHAT_ACTION_FAIL = 12;
@@ -47,19 +48,24 @@ public class AppMessenger {
     final static int RECEIVED_MESSENGER_LATER = 16;
     static int idUser = 0;
 
-    private static Socket mySocket = null;
-    private static DataInputStream in = null;
-    private static DataOutputStream out = null;
-    private static JTextField tfTenTaiKhoan =null;
-    private static JTextField tfMatKhau = null;
-    private static JFrame frameLogIn = null;
-    private static JPanel panelHome = null;
-    private static JFrame frameChat = null;
-    private static JPanel panelChat = null;
-    private static JTextField tfInputMessage = null;
-    private static JPanel panelConversation = null;
-    private static JLabel labelNameFriends = null;
-    private static JButton btnAdd = null;
+    public static Socket mySocket = null;
+    public static DataInputStream in = null;
+    public static DataOutputStream out = null;
+    public static JTextField tfTenTaiKhoan =null;
+    public static JTextField tfMatKhau = null;
+    public static JFrame frameLogIn = null;
+    public static JPanel panelHome = null;
+    public static JFrame frameChat = null;
+    public static JPanel panelChat = null;
+    public static JTextField tfInputMessage = null;
+    public static JPanel panelConversation = null;
+    public static JLabel labelNameFriends = null;
+    public static JButton btnAdd = null;
+    public static JPanel panelSearchUser = null;
+    public static JScrollPane spLoadUser = null;
+    public static JButton btnSearchFriendList =null;
+    public static JFrame frameHome = null;
+
 
     public static void connection() {
         try {
@@ -98,62 +104,41 @@ public class AppMessenger {
             String MatKhauUser = in.readUTF();
             System.out.println(idUser + "  " + HoTenUser + " " + NgaySinhUser + " " + GioiTinhUser + " " + DiaChiUser + " " + QueQuanUser + " " + EmailUser + " " + TenTaiKhoanUser + " " + MatKhauUser);
             JOptionPane.showMessageDialog(null, "Đăng Nhập Thành Công");
-            JFrame frameHome = new JFrame("HOME");
+            frameHome = new JFrame("HOME");
             frameHome.setSize(400, 600);
             frameHome.setLocationRelativeTo(frameHome);
-            frameHome.setResizable(true);
+            frameHome.setResizable(false);
             frameHome.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frameHome.setBackground(Color.gray);
+            frameHome.setForeground(Color.gray);
 
-            //create PanelHome
+            //create PanelHome and panel Search Friend
             panelHome = new JPanel();
-            BoxLayout boxPanelHome = new BoxLayout(panelHome, BoxLayout.Y_AXIS);
-            panelHome.setLayout(boxPanelHome);
-            panelHome.setBorder(new EmptyBorder(100, 100, 550, 50));
+            GridLayout girdPanelHome = new GridLayout(3, 2);
+            panelHome.setLayout(girdPanelHome);
+            panelHome.setBorder(new EmptyBorder(50, 250, 0, 250));
             panelHome.setBackground(Color.GRAY);
-            JButton btnChat = new JButton("Search Friends List");
-            btnChat.setFocusPainted(false);
-            btnChat.setBackground(Color.ORANGE);
-            btnChat.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    try {
-                        System.out.println("search Friends");
-                        frameChat = new JFrame();
-                        frameChat.setSize(400, 600);
-                        frameChat.setLocationRelativeTo(frameChat);
-                        frameChat.setResizable(true);
-                        frameChat.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                        //create panel
-                        panelChat = new JPanel();
-                        BoxLayout boxlayoutChat = new BoxLayout(panelChat, BoxLayout.Y_AXIS);
-                        panelChat.setLayout(boxlayoutChat);
-                        panelChat.setBorder(new EmptyBorder(50, 50, 470, 50));
-                        panelChat.setBackground(Color.ORANGE);
-                        //output data
-                        out.writeInt(LOAD_FRIEND_LIST_ACTION);
-                        out.writeInt(idUser);
-                        out.flush();
+            // panel Search Friend
+            panelSearchUser = new JPanel();
+            BoxLayout boxPanelSearchUser = new BoxLayout(panelSearchUser, BoxLayout.Y_AXIS);
+            panelSearchUser.setLayout(boxPanelSearchUser);
+            panelSearchUser.setBorder(new EmptyBorder(0, 50, 50, 50));
+            panelSearchUser.setBackground(Color.GRAY);
 
-                        //set Layout cho FrameChat
-                        frameChat.setLayout(new GridLayout(1, 1));
+            JLabel lbMsg ;
 
-                        //add componetn to panel and frame
-                        frameChat.add(panelChat);
-                        frameHome.setVisible(false);
-                        frameChat.setVisible(true);
-                    } catch (Exception e1) {
-                        e1.printStackTrace();
-                    }
 
-                }
-            });
+            btnSearchFriendList = new JButton("Search Friends List");
+            btnSearchFriendList.setFocusPainted(false);
+            btnSearchFriendList.setBackground(Color.ORANGE);
+            btnSearchFriendList.addActionListener(new MyActionListener() );
 
             //create tfSearch and btn search
             JTextField tfSearch = new JTextField("");
-            JButton btnSearch = new JButton("Search User");
-            btnSearch.setForeground(Color.black);
-            btnSearch.setFocusPainted(false);
-            btnSearch.addActionListener(new ActionListener() {
+            JButton btnSearchUser = new JButton("Search User");
+            btnSearchUser.setForeground(Color.black);
+            btnSearchUser.setFocusPainted(false);
+            btnSearchUser.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     try {
@@ -167,12 +152,18 @@ public class AppMessenger {
                     }
                 }
             });
-
-            panelHome.add(btnChat);
-            panelHome.add(btnSearch);
+            //add component to panel home
+            panelHome.add(btnSearchFriendList);
+            panelHome.add(btnSearchUser);
             panelHome.add(tfSearch);
-
+            //add panel Load User to scroll panel
+            spLoadUser = new JScrollPane(panelSearchUser, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+            spLoadUser.setPreferredSize(new Dimension(300,400));
+            spLoadUser.setBackground(Color.GRAY);
+            //add component to frame home
             frameHome.add(panelHome);
+            frameHome.add(spLoadUser);
+            frameHome.setLayout(new FlowLayout(1,0,0));
             frameLogIn.setVisible(false);
             frameHome.setVisible(true);
         }
@@ -190,18 +181,12 @@ public class AppMessenger {
             System.out.println("sucess search");;
             //revired data
             int idFriend = in.readInt();
-            String HoTenFriend = in.readUTF();
-            String NgaySinhFriend = in.readUTF();
-            int GioiTinhFriend = in.readInt();
-            String DiaChiFriend = in.readUTF();
-            String QueQuanFriend = in.readUTF();
-            String EmailFriend = in.readUTF();
             String TenTaiKhoanFriend = in.readUTF();
             //create label
             labelNameFriends = new JLabel(TenTaiKhoanFriend, JLabel.CENTER);
             labelNameFriends.setSize(20, 20);
             labelNameFriends.updateUI();
-            panelHome.updateUI();
+            panelSearchUser.updateUI();
             //set lable
 
             btnAdd = new JButton("Add Friend");
@@ -227,9 +212,10 @@ public class AppMessenger {
                 }
             });
 
-            panelHome.add(labelNameFriends);
-            panelHome.add(btnAdd);
-            panelHome.updateUI();
+            panelSearchUser.add(labelNameFriends);
+            panelSearchUser.add(btnAdd);
+            panelSearchUser.updateUI();
+
         }
     }
 
@@ -595,6 +581,42 @@ public class AppMessenger {
     }
 
 }
+
+class MyActionListener implements ActionListener {
+
+        public void actionPerformed(ActionEvent e) {
+        try {
+            System.out.println("search Friends");
+            AppMessenger.frameChat = new JFrame();
+            AppMessenger.frameChat.setSize(400, 600);
+            AppMessenger.frameChat.setLocationRelativeTo(AppMessenger.frameChat);
+            AppMessenger.frameChat.setResizable(true);
+            AppMessenger.frameChat.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            //create panel
+            AppMessenger.panelChat = new JPanel();
+            BoxLayout boxlayoutChat = new BoxLayout(AppMessenger.panelChat, BoxLayout.Y_AXIS);
+            AppMessenger.panelChat.setLayout(boxlayoutChat);
+            AppMessenger.panelChat.setBorder(new EmptyBorder(50, 50, 470, 50));
+            AppMessenger.panelChat.setBackground(Color.ORANGE);
+            //output data
+            AppMessenger.out.writeInt(AppMessenger.LOAD_FRIEND_LIST_ACTION);
+            AppMessenger.out.writeInt(AppMessenger.idUser);
+            AppMessenger.out.flush();
+
+            //set Layout cho FrameChat
+            AppMessenger.frameChat.setLayout(new GridLayout(1, 1));
+
+            //add componetn to panel and frame
+            AppMessenger.frameChat.add(AppMessenger.panelChat);
+            AppMessenger.frameHome.setVisible(false);
+            AppMessenger.frameChat.setVisible(true);
+        } catch (Exception e1) {
+            e1.printStackTrace();
+        }
+
+    }
+}
+
 
 class ThreadHandleInput extends Thread {
 

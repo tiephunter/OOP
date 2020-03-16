@@ -207,31 +207,26 @@ class HandleClientThread extends Thread {
         Statement stmtSearch = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 
 //        Statement stmtAmount = conn.createStatement();
-        ResultSet rsSearch = stmtSearch.executeQuery("SELECT *\n"
-                + "from Users \n"
-                + "where TenTaiKhoan like N'%" + tfSearch + "%'");
+        ResultSet rsSearch = stmtSearch.executeQuery("SELECT Users.IdUser, Users.TenTaiKhoan \n"
+                + " from Users \n"
+                + " where TenTaiKhoan like N'" + tfSearch + "%'  "
+                +" except "
+                +" select Users.IdUser, Users.TenTaiKhoan \n"
+                +" from FriendShip, Users\n"
+                + " where\n"
+                + " FriendShip.UserId = " + idUser +" \n"
+                + " and FriendShip.FriendId = Users.IdUser ");
 
-//                            ResultSet rsAmount = stmtAmount.executeQuery("SELECT COUNT(*)\n"
-//                                    + "from Users \n"
-//                                    + "where TenTaiKhoan like N'%" + tfSearch + "%'");
-//                            while(rsAmount.next()){
-//                                out.writeInt(rsAmount.getInt(1));
-//                                System.out.println(rsAmount.);
-//                            }
+
+
         rsSearch.last();
         out.writeInt(LOAD_USER_lIST_ACTION);
         out.writeInt(rsSearch.getRow());
         rsSearch.beforeFirst();
         while (rsSearch.next()) {
-            System.out.println(rsSearch.getInt(1) + " " + rsSearch.getString(2) + " " + rsSearch.getString(8));
+            System.out.println(rsSearch.getInt(1) + " " + rsSearch.getString(2) );
             out.writeInt(rsSearch.getInt(1));
             out.writeUTF(rsSearch.getString(2));
-            out.writeUTF(rsSearch.getString(3));
-            out.writeInt(rsSearch.getInt(4));
-            out.writeUTF(rsSearch.getString(5));
-            out.writeUTF(rsSearch.getString(6));
-            out.writeUTF(rsSearch.getString(7));
-            out.writeUTF(rsSearch.getString(8));
         }
         out.flush();
     }
