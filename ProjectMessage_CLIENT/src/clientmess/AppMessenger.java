@@ -182,7 +182,7 @@ public class AppMessenger {
             System.out.println("TenTaiKhoanFriend" + TenTaiKhoanFriend);
             searchFriendListFrame.labelTenTkFriend = new JLabel(TenTaiKhoanFriend);
 
-            searchFriendListFrame.btnChat = new JButton("Chat");
+            searchFriendListFrame.btnChat = new JButton(TenTaiKhoanFriend);
             searchFriendListFrame.btnChat.setSize(20, 20);
             searchFriendListFrame. btnChat.setForeground(Color.black);
             searchFriendListFrame.btnChat.setFocusPainted(false);

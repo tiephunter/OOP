@@ -29,7 +29,6 @@ public class TCP_Server_Tong {
             while (true) {
                 if (in.available() > 0) {
                     int a = in.readInt();
-                   
                     System.out.println(a);
                     int b = in.readInt();
                     System.out.println(b);
@@ -39,7 +38,7 @@ public class TCP_Server_Tong {
                         out.writeUTF("Phuowng trinh vo so nghiem");
                         out.flush();
                     } else {
-                        out.writeUTF("Phường trình vô nghiệm");
+                        out.writeUTF("Phư�?ng trình vô nghiệm");
                         out.flush();
                     }
                     } else {
@@ -47,9 +46,7 @@ public class TCP_Server_Tong {
                         out.writeUTF("PHương trình có nghiệm x  ="+kq);
                         System.out.println(kq);
                         out.flush();
-                    }
-                    
-                   
+                    }                
                 }
             }
             

@@ -32,6 +32,7 @@ public class TCP_Client_Tong {
             int b = sc.nextInt();
             out.writeInt(a);
             out.writeInt(b);
+            out.flush();
             String kq = in.readUTF();
             System.out.println("Ket qua la :"+kq);
             

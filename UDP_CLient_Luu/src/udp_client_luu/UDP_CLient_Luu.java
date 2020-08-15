@@ -21,7 +21,8 @@ public class UDP_CLient_Luu {
      * @param args the command line arguments
      */
     public static void main(String[] args) throws IOException {
-        // TODO code application logic here
+        // TODO code application logic heref
+         
         //tao socket bang client
         DatagramSocket my_client= new DatagramSocket();
         InetAddress ip_address= InetAddress.getByName("localhost");

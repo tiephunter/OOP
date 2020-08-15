@@ -57,11 +57,13 @@ public class Dictionary extends javax.swing.JFrame {
     }
     public void sort(){
         Collections.sort(listWord, new Comparator<Word>(){
-            public int compare(Word o1, Word o2){
+            @Override
+            public int compare(Word o1, Word o2) {
                 return o1.getEng().compareToIgnoreCase(o2.getEng());
             }
+            
         });
-        System.out.println("---------------");
+        System.out.println("------------");
     }
 
     /**
@@ -188,6 +190,7 @@ public class Dictionary extends javax.swing.JFrame {
                 if (word.getEng().equals(tfEng.getText())) 
                 {
                     JOptionPane.showMessageDialog(null, "tu nay da co trong tu dien");
+                    return;
                 }
 
             }
