@@ -1,4 +1,4 @@
-package server.payload;
+package clientmess.payload;
 
 public class AddFriendRespond extends BasePayload {
     private int state;

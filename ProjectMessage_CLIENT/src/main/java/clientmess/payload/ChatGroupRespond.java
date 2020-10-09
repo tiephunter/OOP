@@ -1,4 +1,4 @@
-package server.payload;
+package clientmess.payload;
 
 import java.util.List;
 
@@ -7,7 +7,7 @@ public class ChatGroupRespond extends BasePayload {
         List<IdMember> idMembersList;
         private String sessionName;
         private int sessionId;
-        private List<ChatMessage> messageList;
+        List<ChatMessage> messageList;
 
         public ChatGroupRespond() {
         }

@@ -5,6 +5,9 @@ import java.io.Serializable;
 public class BasePayload implements Serializable {
     int action;
 
+    public BasePayload() {
+    }
+
     public BasePayload(int action) {
         this.action = action;
     }
@@ -13,5 +16,7 @@ public class BasePayload implements Serializable {
         return action;
     }
 
-
+    public void setAction(int action) {
+        this.action = action;
+    }
 }

@@ -9,11 +9,10 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GroupConversationFrame {
+public class ConversationFrame {
     JFrame frameConversation;
     JPanel panelConversation;
     JTextField tfInputMessage;
@@ -22,14 +21,14 @@ public class GroupConversationFrame {
     JButton backToHome;
      JFileChooser  fileDialog;
     Mess message;
-    public GroupConversationFrame(ChatRespond chatRespond){
+    public ConversationFrame(ChatRespond chatRespond){
         try{
             //read data from server
             int idUser = chatRespond.getIdUser();
             int idFriend = chatRespond.getIdFriend();
             String tenTaiKhoanFriend = chatRespond.getTenTaiKhoanFriend();
             frameConversation = new JFrame(tenTaiKhoanFriend);
-            frameConversation.setSize(350, 450);
+            frameConversation.setSize(400, 600);
             frameConversation.setLocationRelativeTo(frameConversation);
             frameConversation.setResizable(true);
             frameConversation.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -44,10 +43,9 @@ public class GroupConversationFrame {
             panelConversation.setBackground(Color.white);
             //create panelTextChat
             panelTextChat = new JPanel();
-            BoxLayout textChatBoxLayout = new BoxLayout(panelTextChat,BoxLayout.Y_AXIS);
-            panelTextChat.setLayout(textChatBoxLayout);
-//            panelTextChat.setBorder(new EmptyBorder(50, 150, 50, 150));
+            panelTextChat.setLayout(new FlowLayout());
             panelTextChat.setBackground(Color.gray);
+
             JLabel lbMsg;
             //create button back to home
             backToHome = new JButton("Back to home");
@@ -57,7 +55,7 @@ public class GroupConversationFrame {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     frameConversation.setVisible(false);
-                    AppMessenger.displayLHomeFrame();
+                    AppMessenger.displayAddFriendFrame();
                 }
             });
             //read data from server
@@ -89,11 +87,14 @@ public class GroupConversationFrame {
 
             //create tfMessage and BtnSend
 
-            tfInputMessage = new JTextField("",JTextField.LEFT);
+            tfInputMessage = new JTextField("", 25);
             JButton btnSend = new JButton("Send");
-            btnSend.setSize(20,20);
             btnSend.setFocusPainted(false);
             btnSend.setBackground(Color.WHITE);
+
+            panelTextChat.add(tfInputMessage);
+            panelTextChat.add(btnSend);
+
             btnSend.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -119,12 +120,11 @@ public class GroupConversationFrame {
             //panel add to component
             //create JscrollpaneChat
             JScrollPane spChat = new JScrollPane(panelConversation, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-            spChat.setPreferredSize(new Dimension(300, 400));
+            spChat.setPreferredSize(new Dimension(380, 400));
             JScrollBar sb = spChat.getVerticalScrollBar();
             sb.setValue( sb.getMaximum() );
             spChat.updateUI();
-            panelTextChat.add(tfInputMessage);
-            panelTextChat.add(btnSend);
+
             //panleCon add component
             panelCon.add(backToHome);
             panelCon.add(spChat);
@@ -132,8 +132,8 @@ public class GroupConversationFrame {
 
             //frame add to component
 //            frameConversation.add(backToHome);
-            panelCon.setLayout(new BoxLayout(panelCon, BoxLayout.Y_AXIS));
-            panelCon.setBorder(new EmptyBorder(10, 50, 50, 50));
+            panelCon.setLayout(new FlowLayout());
+            panelCon.setPreferredSize(new Dimension(380, 400));
             panelCon.setBackground(Color.GRAY);
             frameConversation.add(panelCon);
             frameConversation.setLayout(new GridLayout(1, 1));
@@ -142,5 +142,15 @@ public class GroupConversationFrame {
         catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+    public static void main(String[] args) {
+        ChatRespond chatRespond = new ChatRespond();
+        chatRespond.setMessageList(new ArrayList<>());
+        for (int i = 0; i < 100; i++) {
+            ChatMessage chatMessage = new ChatMessage(i, "balbalba " + i, i);
+            chatRespond.getMessageList().add(chatMessage);
+        }
+        ConversationFrame conversationFrame = new ConversationFrame(chatRespond);
     }
 }

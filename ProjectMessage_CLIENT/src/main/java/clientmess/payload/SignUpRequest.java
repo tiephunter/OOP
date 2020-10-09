@@ -1,8 +1,6 @@
 package clientmess.payload;
 
 public class SignUpRequest extends BasePayload {
-    private static final long serialVersionUID = 100;
-
     String tenTk;
     String tenMk;
     String hoten;
@@ -12,8 +10,20 @@ public class SignUpRequest extends BasePayload {
     String quequan;
     String email;
 
-    public SignUpRequest(int action) {
+    public SignUpRequest() {
+    }
+
+
+    public SignUpRequest(int action, String tenTk, String tenMk, String hoten, String ngaysinh, int gioitinh, String diachi, String quequan, String email) {
         super(action);
+        this.tenTk = tenTk;
+        this.tenMk = tenMk;
+        this.hoten = hoten;
+        this.ngaysinh = ngaysinh;
+        this.gioitinh = gioitinh;
+        this.diachi = diachi;
+        this.quequan = quequan;
+        this.email = email;
     }
 
     public String getTenTk() {

@@ -1,4 +1,4 @@
-package server.payload;
+package clientmess.payload;
 
 public class SendMessageRespond extends BasePayload {
     private int userState;
@@ -7,8 +7,8 @@ public class SendMessageRespond extends BasePayload {
     private int idUser;
     private String tfInputMsg;
 
-    public SendMessageRespond(int action) {
-        super(action);
+    public SendMessageRespond() {
+
     }
 
     public SendMessageRespond(int action, int userState, int idMsg, int idSession, int idUser, String tfInputMsg) {

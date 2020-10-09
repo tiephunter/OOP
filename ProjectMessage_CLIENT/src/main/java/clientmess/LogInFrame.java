@@ -1,17 +1,19 @@
 package clientmess;
 
+import clientmess.payload.LogInRequest;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.DataOutputStream;
 
 public class LogInFrame {
-    final static int LOGIN_ACTION = 2;
+//    final static int LOGIN_ACTION = 2;
     JFrame logInFrame;
-    protected JTextField tfTenTaiKhoan;
-    protected JPasswordField tfMatKhau;
+    protected JTextField tfAccount;
+    protected JPasswordField tfPass;
     public LogInFrame(){
         logInFrame = new JFrame("Orange Messenger");
         logInFrame.setSize(350, 350);
@@ -26,11 +28,12 @@ public class LogInFrame {
         //set label, textfield and button
         JLabel labelOrangeMess = new JLabel("                  ORANGE--MESS             ", JLabel.CENTER);
         labelOrangeMess.setBackground(Color.orange);
+        labelOrangeMess.setSize(100,20);
         JLabel labelTenTaiKhoan = new JLabel("Accout", JLabel.LEFT);
         JLabel labelMatKhau = new JLabel("Password", JLabel.LEFT);
 
-        tfTenTaiKhoan = new JTextField("", JTextField.LEFT);
-        tfMatKhau = new JPasswordField("", JPasswordField.LEFT);
+        tfAccount = new JTextField("", JTextField.LEFT);
+        tfPass = new JPasswordField("", JPasswordField.LEFT);
 
         JButton btnLogIn = new JButton("Đăng Nhập");
         btnLogIn.setFocusPainted(false);
@@ -39,10 +42,15 @@ public class LogInFrame {
             public void actionPerformed(ActionEvent e) {
                 try {
                     System.out.println("Log in action");
-                    AppMessenger.out.writeInt(LOGIN_ACTION);
-                    AppMessenger.out.writeUTF(tfTenTaiKhoan.getText());
-                    AppMessenger.out.writeUTF(tfMatKhau.getText());
+                    LogInRequest logInRequest = new LogInRequest();
+                    logInRequest.setAction(AppMessenger.LOGIN_ACTION);
+                    logInRequest.setAccount(tfAccount.getText());
+                    logInRequest.setPass(tfPass.getText());
+                    ObjectMapper objectMapper = new ObjectMapper();
+                    String json = objectMapper.writeValueAsString(logInRequest);
+                    AppMessenger.out.writeUTF(json);
                     AppMessenger.out.flush();
+                    System.out.println("Send LogIn Request");
                 } catch (Exception e2) {
                     JOptionPane.showMessageDialog(null, "cath Nhập sai tài khoản hoặc mật khẩu");
                     System.out.println("Nhập lại đeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
@@ -65,9 +73,9 @@ public class LogInFrame {
         //add component to panel
         panleLogIn.add(labelOrangeMess);
         panleLogIn.add(labelTenTaiKhoan);
-        panleLogIn.add(tfTenTaiKhoan);
+        panleLogIn.add(tfAccount);
         panleLogIn.add(labelMatKhau);
-        panleLogIn.add(tfMatKhau);
+        panleLogIn.add(tfPass);
         panleLogIn.add(btnLogIn);
         panleLogIn.add(btnSignUp);
 

@@ -1,7 +1,7 @@
 package clientmess;
 
 import clientmess.payload.SignUpRequest;
-import org.codehaus.jackson.map.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -85,45 +85,22 @@ public class SigUpFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    SignUpRequest signUpRequest = new SignUpRequest(AppMessenger.SIGNUP_ACTION);
+                    SignUpRequest signUpRequest = new SignUpRequest();
+                    signUpRequest.setAction(AppMessenger.SIGNUP_ACTION);
                     signUpRequest.setTenTk(tfTenTK.getText());
-                    String tenTK = tfTenTK.getText();
                     signUpRequest.setTenMk(tfMK.getText());
-                    String tenMK = tfMK.getText();
                     signUpRequest.setHoten(tfHoTen.getText());
-                    String hoten = tfHoTen.getText();
                     signUpRequest.setNgaysinh(tfNgaySinh.getText());
-                    String ngaySinh = tfNgaySinh.getText();
                     signUpRequest.setGioitinh(Integer.parseInt(tfGioiTinh.getText()));
-                    int gioiTinh = Integer.parseInt(tfGioiTinh.getText());
                     signUpRequest.setDiachi(tfDiaChi.getText());
-                    String diaChi = tfDiaChi.getText();
                     signUpRequest.setQuequan(tfQueQuan.getText());
-                    String queQuan = tfQueQuan.getText();
                     signUpRequest.setEmail(tfEmail.getText());
-                    String Email = tfEmail.getText();
                     signUpRequest.hienthi();
                     ObjectMapper mapper = new ObjectMapper();
-//                    String json =  "tenTk :" + tenTK+",\"tenMk :"  + tenMK+ ", \"hoten :" + hoten+ ", " +
-//                            "\"ngaysinh :"   + ngaySinh +", \"gioitinh :"  + gioiTinh+", \"diachi :"  + diaChi+"," +
-//                            " \"quequan :"  + queQuan+", \"email :"  +Email;
                     String json = mapper.writeValueAsString(signUpRequest);
-//                    AppMessenger.out.writeInt(AppMessenger.SIGNUP_ACTION);
                     AppMessenger.out.writeUTF(json);
                     AppMessenger.out.flush();
-                    System.out.println("send signup");
-
-//
-//                    AppMessenger.out.writeInt(AppMessenger.SIGNUP_ACTION);
-//                    AppMessenger.out.writeUTF(tfTenTK.getText());
-//                    AppMessenger.out.writeUTF(tfMK.getText());
-//                    AppMessenger.out.writeUTF(tfHoTen.getText());
-//                    AppMessenger.out.writeUTF(tfNgaySinh.getText());
-//                    AppMessenger.out.writeInt(Integer.parseInt(tfGioiTinh.getText()));
-//                    AppMessenger.out.writeUTF(tfDiaChi.getText());
-//                    AppMessenger.out.writeUTF(tfQueQuan.getText());
-//                    AppMessenger.out.writeUTF(tfEmail.getText());
-//                    AppMessenger.out.flush();
+                    System.out.println("send sign up action");
 
                 } catch (IOException e1) {
                     System.err.println(e1);

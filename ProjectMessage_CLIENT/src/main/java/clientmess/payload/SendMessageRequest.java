@@ -1,16 +1,16 @@
 package clientmess.payload;
 
-public class SendGroupMessageRequest extends BasePayload {
+public class SendMessageRequest extends BasePayload {
     private int sessionID;
     private String tfInputMessage;
     private int idUser;
     private int idFriend;
 
-    public SendGroupMessageRequest() {
+    public SendMessageRequest() {
 
     }
 
-    public SendGroupMessageRequest(int action, int sessionID, String tfInputMessage, int idUser, int idFriend) {
+    public SendMessageRequest(int action, int sessionID, String tfInputMessage, int idUser, int idFriend) {
         super(action);
         this.sessionID = sessionID;
         this.tfInputMessage = tfInputMessage;

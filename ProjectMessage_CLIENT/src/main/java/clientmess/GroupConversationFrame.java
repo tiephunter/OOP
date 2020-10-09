@@ -1,7 +1,8 @@
 package clientmess;
 
+import clientmess.payload.ChatGroupRespond;
 import clientmess.payload.ChatMessage;
-import clientmess.payload.ChatRespond;
+import clientmess.payload.SendGroupMessageRequest;
 import clientmess.payload.SendMessageRequest;
 
 import javax.swing.*;
@@ -9,11 +10,10 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ConversationFrame {
+public class GroupConversationFrame {
     JFrame frameConversation;
     JPanel panelConversation;
     JTextField tfInputMessage;
@@ -22,13 +22,20 @@ public class ConversationFrame {
     JButton backToHome;
      JFileChooser  fileDialog;
     Mess message;
-    public ConversationFrame(ChatRespond chatRespond){
+    public GroupConversationFrame(ChatGroupRespond chatGroupRespond){
         try{
             //read data from server
-            int idUser = chatRespond.getIdUser();
-            int idFriend = chatRespond.getIdFriend();
-            String tenTaiKhoanFriend = chatRespond.getTenTaiKhoanFriend();
-            frameConversation = new JFrame(tenTaiKhoanFriend);
+            int idUser = chatGroupRespond.getIdUser();
+            List<ChatGroupRespond.IdMember> idMemberList = chatGroupRespond.getIdMembersList();
+            List<SendGroupMessageRequest.IdMember> idMemberList1 = new ArrayList<>();
+            for (ChatGroupRespond.IdMember idMember : idMemberList){
+                int id = idMember.getIdMember();
+
+                SendGroupMessageRequest.IdMember idMbSend = new SendGroupMessageRequest.IdMember(id);
+                idMemberList1.add(idMbSend);
+            }
+            String sessionName = chatGroupRespond.getSessionName();
+            frameConversation = new JFrame(sessionName);
             frameConversation.setSize(350, 450);
             frameConversation.setLocationRelativeTo(frameConversation);
             frameConversation.setResizable(true);
@@ -43,11 +50,11 @@ public class ConversationFrame {
 //            panelConversation.setBorder(new EmptyBorder(150, 100, 50, 100));
             panelConversation.setBackground(Color.white);
             //create panelTextChat
+            //create panelTextChat
             panelTextChat = new JPanel();
-            BoxLayout textChatBoxLayout = new BoxLayout(panelTextChat,BoxLayout.Y_AXIS);
-            panelTextChat.setLayout(textChatBoxLayout);
-//            panelTextChat.setBorder(new EmptyBorder(50, 150, 50, 150));
+            panelTextChat.setLayout(new FlowLayout());
             panelTextChat.setBackground(Color.gray);
+
             JLabel lbMsg;
             //create button back to home
             backToHome = new JButton("Back to home");
@@ -57,13 +64,13 @@ public class ConversationFrame {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     frameConversation.setVisible(false);
-                    AppMessenger.displayLHomeFrame();
+                    AppMessenger.displayLMainFrame();
                 }
             });
             //read data from server
-            int sessionId = chatRespond.getSessionId();
-            int amountMessage = chatRespond.getMessageList().size();
-            List<ChatMessage> listMessage = chatRespond.getMessageList();
+            int sessionId = chatGroupRespond.getSessionId();
+            int amountMessage = chatGroupRespond.getMessageList().size();
+            List<ChatMessage> listMessage = chatGroupRespond.getMessageList();
             System.out.println("List Message" + listMessage);
             //count Messsager
             for (int i = 0; i < amountMessage; i++) {
@@ -89,7 +96,7 @@ public class ConversationFrame {
 
             //create tfMessage and BtnSend
 
-            tfInputMessage = new JTextField("",JTextField.LEFT);
+            tfInputMessage = new JTextField("",30);
             JButton btnSend = new JButton("Send");
             btnSend.setSize(20,20);
             btnSend.setFocusPainted(false);
@@ -99,8 +106,9 @@ public class ConversationFrame {
                 public void actionPerformed(ActionEvent e) {
                     try {
                         System.out.println("sesion id " + sessionId);
-                        SendMessageRequest sendMessageRequest = new SendMessageRequest(AppMessenger.SEND_MESSAGE_ACTION, sessionId, tfInputMessage.getText(),idUser,idFriend);
-                        String json = AppMessenger.mapper.writeValueAsString(sendMessageRequest);
+                        SendGroupMessageRequest sendGroupMessageRequest = new SendGroupMessageRequest(AppMessenger.SEND_MESSAGE_GROUP_ACTION,sessionId,
+                                tfInputMessage.getText(),idUser,idMemberList1);
+                        String json = AppMessenger.mapper.writeValueAsString(sendGroupMessageRequest);
                         AppMessenger.out.writeUTF(json);
                         AppMessenger.out.flush();
                         JLabel lbSendMessage = new JLabel(tfInputMessage.getText(), JLabel.RIGHT);
@@ -117,14 +125,15 @@ public class ConversationFrame {
 
 
             //panel add to component
+            panelTextChat.add(tfInputMessage);
+            panelTextChat.add(btnSend);
             //create JscrollpaneChat
             JScrollPane spChat = new JScrollPane(panelConversation, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-            spChat.setPreferredSize(new Dimension(300, 400));
+            spChat.setPreferredSize(new Dimension(380, 400));
             JScrollBar sb = spChat.getVerticalScrollBar();
             sb.setValue( sb.getMaximum() );
             spChat.updateUI();
-            panelTextChat.add(tfInputMessage);
-            panelTextChat.add(btnSend);
+
             //panleCon add component
             panelCon.add(backToHome);
             panelCon.add(spChat);

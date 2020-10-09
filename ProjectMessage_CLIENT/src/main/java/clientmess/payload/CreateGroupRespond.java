@@ -1,4 +1,4 @@
-package server.payload;
+package clientmess.payload;
 
 public class CreateGroupRespond extends BasePayload {
     private String state;

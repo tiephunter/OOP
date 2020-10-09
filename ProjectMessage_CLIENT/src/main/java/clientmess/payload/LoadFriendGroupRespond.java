@@ -1,4 +1,4 @@
-package server.payload;
+package clientmess.payload;
 
 import java.util.List;
 

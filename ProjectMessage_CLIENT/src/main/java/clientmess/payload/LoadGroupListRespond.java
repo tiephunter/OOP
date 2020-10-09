@@ -1,4 +1,4 @@
-package server.payload;
+package clientmess.payload;
 
 import java.util.List;
 
@@ -26,6 +26,7 @@ public class LoadGroupListRespond extends BasePayload {
         private int idSession;
         private String sessionName;
 
+        public Group(){}
         public Group(int idUser, int idSession, String sessionName) {
             this.idUser = idUser;
             this.idSession = idSession;

@@ -70,8 +70,8 @@ public class MainFrame {
         addFriendBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-//                chatListFrame.setVisible(false);
-                AppMessenger.displayLHomeFrame();
+                chatListFrame.setVisible(false);
+                AppMessenger.displayAddFriendFrame();
             }
         });
 
@@ -105,6 +105,7 @@ public class MainFrame {
         // searchChatNamePanel add component
         othersFunctionPanel.add(addFriendBtn);
         othersFunctionPanel.add(createGroupBtn);
+        othersFunctionPanel.add(groupBtn);
         othersFunctionPanel.add(signOutBtn);
 
         searchPanel.add(searchChatNameTF);
@@ -117,6 +118,9 @@ public class MainFrame {
         chatListFrame.add(othersFunctionPanel);
         chatListFrame.add(searchPanel);
         chatListFrame.setVisible(true);
+    }
+    public void  hide(){
+        chatListFrame.setVisible(false);
     }
 
 //    public static void main(String[] args) throws InterruptedException {

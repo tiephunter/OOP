@@ -5,14 +5,13 @@ import clientmess.payload.ChatRespond;
 import clientmess.payload.SendMessageRequest;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ConversationFrame {
+public class ConversationFrameTest {
     JFrame frameConversation;
     JPanel panelConversation;
     JTextField tfInputMessage;
@@ -21,7 +20,7 @@ public class ConversationFrame {
     JButton backToHome;
      JFileChooser  fileDialog;
     Mess message;
-    public ConversationFrame(ChatRespond chatRespond){
+    public ConversationFrameTest(ChatRespond chatRespond){
         try{
             //read data from server
             int idUser = chatRespond.getIdUser();
@@ -151,6 +150,6 @@ public class ConversationFrame {
             ChatMessage chatMessage = new ChatMessage(i, "balbalba " + i, i);
             chatRespond.getMessageList().add(chatMessage);
         }
-        ConversationFrame conversationFrame = new ConversationFrame(chatRespond);
+        ConversationFrameTest conversationFrame = new ConversationFrameTest(chatRespond);
     }
 }

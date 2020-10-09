@@ -3,6 +3,8 @@ package clientmess.payload;
 public class SignUpResponse extends BasePayload {
     String message;
 
+    public SignUpResponse() {
+    }
 
     public SignUpResponse(int action, String message) {
         super(action);
@@ -11,5 +13,9 @@ public class SignUpResponse extends BasePayload {
 
     public String getMessage() {
         return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 }
