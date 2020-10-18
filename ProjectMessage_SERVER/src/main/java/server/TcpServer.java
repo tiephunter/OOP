@@ -199,9 +199,8 @@ class HandleClientThread extends Thread {
     }
 
     public void handleLogin(LogInRequest logInRequest) throws Exception {
-//        String TenTaiKhoan = in.readUTF();
-        String MatKhau = logInRequest.getPass();
-        String encryptPass = encryptThisString(MatKhau);
+        String pass = logInRequest.getPass();
+        String encryptPass = encryptThisString(pass);
         Statement stmt = conn.createStatement();
         ResultSet rs = stmt.executeQuery("select *\n"
                 + "from Users\n"
@@ -225,14 +224,10 @@ class HandleClientThread extends Thread {
     }
 
     public void handleSearchUserList(LoadUserRequest loadUserRequest) throws Exception {
-
         int idUser = loadUserRequest.getIdUser();
-
         String tfSearch = loadUserRequest.getMessage();
         System.out.println("id User " + idUser + "Mess" + tfSearch);
         Statement stmtSearch = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-
-//        Statement stmtAmount = conn.createStatement();
         ResultSet rsSearch = stmtSearch.executeQuery("SELECT Users.IdUser, Users.TenTaiKhoan \n"
                 + " from Users \n"
                 + " where TenTaiKhoan like N'" + tfSearch + "%'  "
@@ -247,9 +242,6 @@ class HandleClientThread extends Thread {
                 + " from Users \n"
                 + " where \n"
                 + " Users.IdUser = " + idUser);
-
-
-        //create object respond
         LoadUserRespond loadUserRespond = new LoadUserRespond();
         loadUserRespond.setAction(LOAD_USER_lIST_ACTION);
         List<LoadUserRespond.LoadUser> loadUserList = new ArrayList<>();
@@ -261,7 +253,6 @@ class HandleClientThread extends Thread {
             loadUserList.add(loadUser);
         }
         loadUserRespond.setLoadUserList(loadUserList);
-
         out.writeUTF(TcpServer.mapper.writeValueAsString(loadUserRespond));
         out.flush();
     }
@@ -294,7 +285,6 @@ class HandleClientThread extends Thread {
         Statement stmtAddFriend1 = conn.createStatement();
         stmtAddFriend1.execute("INSERT INTO FriendShip(UserId,FriendId,TimeCreated,IdSession)"
                 + "Values(" + idFriend + "," + idUser + ",'" + TimeCreated + "'," +sessionId + ")");
-        System.out.println("add 2");
         //insert to Participate
         Statement stmParticipate = conn.createStatement();
         stmParticipate.execute("INSERT INTO Participate(IdUser,IdSession,TimeJoin)"
@@ -469,7 +459,6 @@ class HandleClientThread extends Thread {
                 out.writeUTF(json);
                 out.flush();
             } else {
-
                 Statement loadMessageStmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
                 ResultSet loadMessageRs = loadMessageStmt.executeQuery("select * from Message where IdSession = " + sessionId);
                 System.out.println("LoadMessage "+ loadMessageRs);
@@ -477,9 +466,9 @@ class HandleClientThread extends Thread {
                 loadMessageRs.beforeFirst();
                 List<ChatMessage> messageList = new ArrayList<>();
                 while (loadMessageRs.next()) {
-                    ChatMessage chatMessage = new ChatMessage(loadMessageRs.getInt(1), loadMessageRs.getString(2), loadMessageRs.getInt(5));
+                    ChatMessage chatMessage = new ChatMessage(loadMessageRs.getInt(1), loadMessageRs.getString(5),
+                            loadMessageRs.getInt(4));
                     messageList.add(chatMessage);
-
                 }
                 ChatRespond chatRespond = new ChatRespond(CHAT_ACTION, CHAT_ACTION_SUCCESS, idUser, idFriend, tenTaiKhoanFriend, sessionId, messageList);
                 String json = TcpServer.mapper.writeValueAsString(chatRespond);
@@ -490,41 +479,44 @@ class HandleClientThread extends Thread {
 
     }
 
-    public void handleReceivedMsg(SendMessageRequest sendMessageRequest) throws Exception {
-        int idSession = sendMessageRequest.getSessionID();
-        String tfInputMsg = sendMessageRequest.getTfInputMessage();
-        int idUser = sendMessageRequest.getIdUser();
-        int idFriend = sendMessageRequest.getIdFriend();
-        if(tfInputMsg.equalsIgnoreCase("")){
-            System.out.println( "Ko có tn");
-        }
-        else {
-            //check idFriend in map or not
-            boolean testIdFriend = TcpServer.clientHashMap.containsKey(idFriend);
-            //
-            LocalTime TimeStart = LocalTime.now(ZoneId.of("Asia/Ho_Chi_Minh"));
-            PreparedStatement stmt = conn.prepareStatement("insert into Message(TextMess,IdSession,Time,IdSender) "
-                    + "values(N'" + tfInputMsg + "'," + idSession + ",'" + TimeStart + "'," + idUser + ")", Statement.RETURN_GENERATED_KEYS);
-
-            stmt.execute();
-            ResultSet rs = stmt.getGeneratedKeys();
-            System.out.println("detect success 1");
-            while (rs.next()) {
-                if (testIdFriend == true) {
-                    System.out.println("detect success 2");
-                    Socket friendSocket = TcpServer.clientHashMap.get(idFriend);
-                    DataOutputStream friendOut = new DataOutputStream(friendSocket.getOutputStream());
-                    SendMessageRespond sendMessageRespond = new SendMessageRespond(RECEIVED_MESSAGE_ACTION,RECEIVED_MESSENGER_NOW,rs.getInt(1),idSession,idUser,tfInputMsg);
-                    String json = TcpServer.mapper.writeValueAsString(sendMessageRespond);
-                    friendOut.writeUTF(json);
-                    friendOut.flush();
-                    System.out.println("gửi lúc onl");
-                } else {
-                    System.out.println("offline");
+    public void handleReceivedMsg(SendMessageRequest sendMessageRequest){
+        try {
+            int idSession = sendMessageRequest.getSessionID();
+            String tfInputMsg = sendMessageRequest.getTfInputMessage();
+            int idUser = sendMessageRequest.getIdUser();
+            int idFriend = sendMessageRequest.getIdFriend();
+            if(tfInputMsg.equalsIgnoreCase("")){
+                System.out.println( "Ko có tn");
+            }
+            else {
+                //check idFriend in map or not
+                boolean testIdFriend = TcpServer.clientHashMap.containsKey(idFriend);
+                //
+                LocalTime TimeStart = LocalTime.now(ZoneId.of("Asia/Ho_Chi_Minh"));
+                PreparedStatement stmt = conn.prepareStatement("insert into Message(IdSession,Time,IdSender,TextMess) "
+                        + "values(" + idSession + ",'" + TimeStart + "'," + idUser + ",N'" + tfInputMsg + "')", Statement.RETURN_GENERATED_KEYS);
+                stmt.execute();
+                ResultSet rs = stmt.getGeneratedKeys();
+                System.out.println("detect success 1");
+                while (rs.next()) {
+                    if (testIdFriend == true) {
+                        System.out.println("detect success 2");
+                        Socket friendSocket = TcpServer.clientHashMap.get(idFriend);
+                        DataOutputStream friendOut = new DataOutputStream(friendSocket.getOutputStream());
+                        SendMessageRespond sendMessageRespond = new SendMessageRespond(RECEIVED_MESSAGE_ACTION,RECEIVED_MESSENGER_NOW,
+                                                                rs.getInt(1),idSession,idUser,tfInputMsg);
+                        String json = TcpServer.mapper.writeValueAsString(sendMessageRespond);
+                        friendOut.writeUTF(json);
+                        friendOut.flush();
+                        System.out.println("gửi lúc onl");
+                    } else {
+                        System.out.println("offline");
+                    }
                 }
             }
+        }catch (Exception e){
+            e.printStackTrace();
         }
-
     }
     public void handleChatGroup(ChatGroupRequest chatGroupRequest){
         int idUser = chatGroupRequest.getIdUser();
@@ -538,7 +530,7 @@ class HandleClientThread extends Thread {
             loadMessageRs.beforeFirst();
             List<ChatMessage> messageList = new ArrayList<>();
             while (loadMessageRs.next()) {
-                ChatMessage chatMessage = new ChatMessage(loadMessageRs.getInt(1), loadMessageRs.getString(2), loadMessageRs.getInt(5));
+                ChatMessage chatMessage = new ChatMessage(loadMessageRs.getInt(1), loadMessageRs.getString(5), loadMessageRs.getInt(4));
                 messageList.add(chatMessage);
 
             }
@@ -570,8 +562,8 @@ class HandleClientThread extends Thread {
             }else {
                 // Insert message to DB.
                 LocalTime TimeStart = LocalTime.now(ZoneId.of("Asia/Ho_Chi_Minh"));
-                PreparedStatement stmt = conn.prepareStatement("insert into Message(TextMess,IdSession,Time,IdSender) "
-                        + "values(N'" + tfInputMsg + "'," + idSession + ",'" + TimeStart + "'," + idUser + ")", Statement.RETURN_GENERATED_KEYS);
+                PreparedStatement stmt = conn.prepareStatement("insert into Message(IdSession,Time,IdSender,TextMess) "
+                        + "values(" + idSession + ",'" + TimeStart + "'," + idUser + ",N'" + tfInputMsg + "')", Statement.RETURN_GENERATED_KEYS);
                 stmt.execute();
                 ResultSet rs = stmt.getGeneratedKeys();
                 int idMessage = 0;
