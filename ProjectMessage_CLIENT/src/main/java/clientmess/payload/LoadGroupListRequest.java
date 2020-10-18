@@ -1,7 +1,7 @@
 package clientmess.payload;
 
 public class LoadGroupListRequest extends BasePayload {
-    private int idUser ;
+    private int idUser;
 
     public LoadGroupListRequest() {
     }

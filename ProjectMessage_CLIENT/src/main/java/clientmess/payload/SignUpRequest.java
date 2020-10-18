@@ -90,7 +90,7 @@ public class SignUpRequest extends BasePayload {
         this.email = email;
     }
 
-    public void hienthi(){
-        System.out.println("ten tk "+ getTenTk() +"MK la " +getTenMk());
+    public void hienthi() {
+        System.out.println("ten tk " + getTenTk() + "MK la " + getTenMk());
     }
 }

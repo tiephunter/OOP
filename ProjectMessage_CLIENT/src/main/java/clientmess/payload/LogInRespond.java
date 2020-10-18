@@ -1,6 +1,6 @@
 package clientmess.payload;
 
-public class LogInRespond extends BasePayload{
+public class LogInRespond extends BasePayload {
     private int state;
     private int idUser;
 

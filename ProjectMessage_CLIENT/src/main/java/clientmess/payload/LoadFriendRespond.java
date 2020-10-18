@@ -21,7 +21,7 @@ public class LoadFriendRespond extends BasePayload {
         this.loadFriendsList = loadFriendsList;
     }
 
-    public static class LoadFriend{
+    public static class LoadFriend {
         private int idUser;
         private String tenTaiKhoan;
         private String hoTen;

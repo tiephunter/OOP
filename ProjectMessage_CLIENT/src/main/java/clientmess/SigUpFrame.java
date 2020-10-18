@@ -21,7 +21,8 @@ public class SigUpFrame {
     JTextField tfDiaChi;
     JTextField tfQueQuan;
     JTextField tfEmail;
-    public SigUpFrame(){
+
+    public SigUpFrame() {
         sigUpFrame = new JFrame("Form Đăng kí Tai Khoan");
         sigUpFrame.setSize(400, 600);
         sigUpFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -72,7 +73,7 @@ public class SigUpFrame {
         tfGioiTinh = new JTextField("", JTextField.LEFT);
         JLabel sexLb = new JLabel("Notice: Male = 0; Female = 1");
         tfDiaChi = new JTextField("", JTextField.LEFT);
-        tfQueQuan =  new JTextField("", JTextField.LEFT);
+        tfQueQuan = new JTextField("", JTextField.LEFT);
         tfEmail = new JTextField("", JTextField.LEFT);
 
         //create button Sing up
@@ -155,7 +156,7 @@ public class SigUpFrame {
 
     }
 
-    public void hide(){
+    public void hide() {
         sigUpFrame.setVisible(false);
     }
 }

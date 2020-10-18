@@ -21,14 +21,14 @@ public class LoadUserRespond extends BasePayload {
         this.loadUserList = loadUserList;
     }
 
-    public static class LoadUser{
+    public static class LoadUser {
         private int idFriend;
         private String nameFriend;
 
-    public LoadUser() {
+        public LoadUser() {
         }
 
-    public LoadUser( int idFriend, String nameFriend) {
+        public LoadUser(int idFriend, String nameFriend) {
             this.idFriend = idFriend;
             this.nameFriend = nameFriend;
         }

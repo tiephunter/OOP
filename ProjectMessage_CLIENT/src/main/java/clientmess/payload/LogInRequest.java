@@ -1,8 +1,8 @@
 package clientmess.payload;
 
-public class LogInRequest extends BasePayload{
+public class LogInRequest extends BasePayload {
 
-    private String account ;
+    private String account;
     private String pass;
 
     public LogInRequest() {

@@ -4,38 +4,51 @@ import clientmess.payload.LogInRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class LogInFrame {
-//    final static int LOGIN_ACTION = 2;
+    //    final static int LOGIN_ACTION = 2;
     JFrame logInFrame;
     protected JTextField tfAccount;
     protected JPasswordField tfPass;
-    public LogInFrame(){
+    JButton btnLogIn;
+    JButton btnSignUp;
+    JPanel panleLogIn;
+
+    public LogInFrame() {
         logInFrame = new JFrame("Orange Messenger");
         logInFrame.setSize(350, 350);
         logInFrame.setLocationRelativeTo(logInFrame);
         logInFrame.setResizable(true);
         logInFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        logInFrame.setBackground(Color.gray);
 
         //set panelDangNhap
-        JPanel panleLogIn = new JPanel();
+        panleLogIn = new JPanel();
+        //set Layout for panel;
+        panleLogIn.setLayout(new BoxLayout(panleLogIn, BoxLayout.Y_AXIS));
+        panleLogIn.setBorder(new EmptyBorder(50, 50, 100, 70));
+        panleLogIn.setBackground(new java.awt.Color(135, 206 ,255));
+        panleLogIn.setForeground(Color.black);
+        panleLogIn.setBorder(new RoundedBorder(20));
+//        panleLogIn.setBackground(Color.GRAY);
 
         //set label, textfield and button
-        JLabel labelOrangeMess = new JLabel("                  ORANGE--MESS             ", JLabel.CENTER);
+        JLabel labelOrangeMess = new JLabel("                            ORANGE--MESS             ", JLabel.CENTER);
         labelOrangeMess.setBackground(Color.orange);
-        labelOrangeMess.setSize(100,20);
+        labelOrangeMess.setSize(100, 20);
         JLabel labelTenTaiKhoan = new JLabel("Accout", JLabel.LEFT);
         JLabel labelMatKhau = new JLabel("Password", JLabel.LEFT);
-
         tfAccount = new JTextField("", JTextField.LEFT);
         tfPass = new JPasswordField("", JPasswordField.LEFT);
 
-        JButton btnLogIn = new JButton("Đăng Nhập");
+        btnLogIn = new JButton("Đăng Nhập");
+        btnLogIn.setBackground(new java.awt.Color(255 ,255, 0));
+//        btnLogIn.setForeground(Color.black);
+        btnLogIn.setBorder(new RoundedBorder(10));
         btnLogIn.setFocusPainted(false);
         btnLogIn.addActionListener(new ActionListener() {
             @Override
@@ -61,7 +74,10 @@ public class LogInFrame {
             }
         });
 
-        JButton btnSignUp = new JButton("Đăng Kí");
+        btnSignUp = new JButton("Đăng Kí");
+        btnSignUp.setBackground(new java.awt.Color(255 ,255, 0));
+//        btnSignUp.setForeground(Color.black);
+        btnSignUp.setBorder(new RoundedBorder(10));
         btnSignUp.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -79,17 +95,29 @@ public class LogInFrame {
         panleLogIn.add(btnLogIn);
         panleLogIn.add(btnSignUp);
 
-        //set Layout for panel;
-        panleLogIn.setLayout(new BoxLayout(panleLogIn, BoxLayout.Y_AXIS));
-        panleLogIn.setBorder(new EmptyBorder(50, 50, 100, 70));
-        panleLogIn.setBackground(Color.GRAY);
+
 
         //add to Frame
         logInFrame.setLayout(new GridLayout(1, 1));
         logInFrame.add(panleLogIn);
         logInFrame.setVisible(true);
     }
-    public void hide(){
+    class RoundedBorder implements Border {
+        int radius;
+        RoundedBorder(int radius) {
+            this.radius = radius;
+        }
+        public Insets getBorderInsets(Component c) {
+            return new Insets(this.radius+1, this.radius+1, this.radius+2, this.radius);
+        }
+        public boolean isBorderOpaque() {
+            return true;
+        }
+        public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
+            g.drawRoundRect(x,y,width-1,height-1,radius,radius);
+        }
+    }
+    public void hide() {
         logInFrame.setVisible(false);
     }
 }

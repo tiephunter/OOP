@@ -6,11 +6,10 @@
 package clientmess;
 
 /**
- *
  * @author cmtie
  */
 public class User {
-    private int idUser ;
+    private int idUser;
     private String tenDangNhap;
     private String matKhau;
     private String hoTen;
@@ -106,7 +105,6 @@ public class User {
     public void setEmail(String email) {
         this.email = email;
     }
-    
-    
-    
+
+
 }

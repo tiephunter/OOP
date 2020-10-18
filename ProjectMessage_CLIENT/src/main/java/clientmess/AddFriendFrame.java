@@ -6,6 +6,8 @@ import clientmess.payload.LoadUserRespond;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -17,16 +19,18 @@ import static clientmess.AppMessenger.idUser;
 
 public class AddFriendFrame {
     final static int LOAD_USER_lIST_ACTION = 5;
-    final static int LOAD_FRIEND_LIST_ACTION =7;
+    final static int LOAD_FRIEND_LIST_ACTION = 7;
     JFrame AddFriendFrame;
     JPanel panelButton;
     JPanel panelSearchUser;
     JButton btnSearchFriendList;
     JScrollPane spLoadUser;
-    JButton signOutBtn;
+    JButton backToHome;
+    JButton btnAdd;
+    JButton btnSearchUser;
 
 
-    public AddFriendFrame(){
+    public AddFriendFrame() {
         AddFriendFrame = new JFrame("Add Friend");
         AddFriendFrame.setSize(400, 600);
         AddFriendFrame.setLocationRelativeTo(AddFriendFrame);
@@ -37,21 +41,23 @@ public class AddFriendFrame {
 
         //create PanelHome and panel Search Friend
         panelButton = new JPanel();
-        panelButton.setPreferredSize(new Dimension(400,100));
-        panelButton.setLayout((new FlowLayout()));
-        panelButton.setBackground(Color.GRAY);
+        panelButton.setPreferredSize(new Dimension(400, 100));
+        panelButton.setLayout((new FlowLayout(FlowLayout.LEFT)));
+        panelButton.setBorder(new EmptyBorder(0, 15, 0, 15));
+        panelButton.setBackground(Color.WHITE);
         // panel Search Friend
         panelSearchUser = new JPanel();
-        panelSearchUser.setPreferredSize(new Dimension(400,50));
-        panelSearchUser.setLayout(new FlowLayout(FlowLayout.LEFT));
-        panelSearchUser.setBackground(Color.GRAY);
+        panelSearchUser.setLayout(new FlowLayout());
+        panelSearchUser.setBackground(Color.white);
 
-        JLabel lbMsg ;
+        JLabel lbMsg;
 
-        signOutBtn = new JButton("Back to home");
-        signOutBtn.setFocusPainted(false);
-        signOutBtn.setForeground(Color.gray);
-        signOutBtn.addActionListener(new ActionListener() {
+        backToHome = new JButton("< Back ");
+        backToHome.setFocusPainted(false);
+        backToHome.setForeground(Color.black);
+        backToHome.setBackground(new java.awt.Color(0 ,191 ,255));
+        backToHome.setBorder(new RoundedBorder(10));
+        backToHome.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 AddFriendFrame.setVisible(false);
@@ -62,6 +68,8 @@ public class AddFriendFrame {
         btnSearchFriendList = new JButton("Search Friends List");
         btnSearchFriendList.setFocusPainted(false);
         btnSearchFriendList.setForeground(Color.black);
+        btnSearchFriendList.setBackground(new java.awt.Color(0 ,191 ,255));
+        btnSearchFriendList.setBorder(new RoundedBorder(5));
         btnSearchFriendList.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -71,15 +79,16 @@ public class AddFriendFrame {
         });
 
         JTextField tfSearch = new JTextField("", 20);
-//        tfSearch.setPreferredSize(new Dimension(15,15));
-        JButton btnSearchUser = new JButton("Search");
-        btnSearchUser.setForeground(Color.black);
+        btnSearchUser = new JButton("Search");
         btnSearchUser.setFocusPainted(false);
+        btnSearchUser.setForeground(Color.black);
+        btnSearchUser.setBackground(new java.awt.Color(0 ,191 ,255));
+        btnSearchUser.setBorder(new RoundedBorder(5));
         btnSearchUser.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    LoadUserRequest loadUserRequest = new LoadUserRequest(LOAD_USER_lIST_ACTION,AppMessenger.idUser,tfSearch.getText());
+                    LoadUserRequest loadUserRequest = new LoadUserRequest(LOAD_USER_lIST_ACTION, AppMessenger.idUser, tfSearch.getText());
                     ObjectMapper mapper = new ObjectMapper();
                     String json = mapper.writeValueAsString(loadUserRequest);
                     AppMessenger.out.writeUTF(json);
@@ -90,15 +99,19 @@ public class AddFriendFrame {
             }
         });
         //add component to panel home
-        panelButton.add(signOutBtn);
+        panelButton.add(backToHome);
         panelButton.add(btnSearchFriendList);
 //        panelSearchUser.add(panelButton);
         panelButton.add(tfSearch);
         panelButton.add(btnSearchUser);
         //add panel Load User to scroll panel
+
         spLoadUser = new JScrollPane(panelSearchUser, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        spLoadUser.setPreferredSize(new Dimension(380,450));
-        spLoadUser.setBackground(Color.GRAY);
+        spLoadUser.setPreferredSize(new Dimension(380, 450));
+        spLoadUser.setForeground(Color.black);
+        spLoadUser.setBackground(new java.awt.Color(0 ,191 ,255));
+
+
         //add component to frame home
         AddFriendFrame.add(panelButton);
         AddFriendFrame.add(spLoadUser);
@@ -108,16 +121,21 @@ public class AddFriendFrame {
 
     public void displayUserList(List<LoadUserRespond.LoadUser> loadUserList) {
         panelSearchUser.removeAll();
-
-        for (LoadUserRespond.LoadUser loadUser: loadUserList){
+        int width = 400;
+        int height = 0;
+        for (LoadUserRespond.LoadUser loadUser : loadUserList) {
+            //create user panel
+            height += 55;
             JPanel userPanel = new JPanel();
             userPanel.setPreferredSize(new Dimension(400, 50));
+            userPanel.setBackground(Color.white);
+            //create label
             JLabel userNameLabel = new JLabel(loadUser.getNameFriend());
             userNameLabel.setPreferredSize(new Dimension(200, 50));
 
-            JButton btnAdd = new JButton("Add Friend");
-            btnAdd.setBackground(Color.gray);
-
+            btnAdd = new JButton("Add Friend");
+            btnAdd.setBackground(new java.awt.Color(0 ,191 ,255));
+            btnAdd.setBorder(new RoundedBorder(5));
             //set button
             btnAdd.setFocusPainted(false);
             btnAdd.addActionListener(new ActionListener() {
@@ -135,26 +153,48 @@ public class AddFriendFrame {
                     }
                 }
             });
-
             userPanel.add(userNameLabel);
             userPanel.add(btnAdd);
             panelSearchUser.add(userPanel);
-            panelSearchUser.updateUI();
         }
+
+        panelSearchUser.setPreferredSize(new Dimension(width, height));
+        panelSearchUser.revalidate();
+        panelSearchUser.repaint();
+//        Rectangle viewBounds = spLoadUser.getViewportBorderBounds();
+//        panelSearchUser.scrollRectToVisible(new Rectangle(0,height,viewBounds.width,viewBounds.height));
 
     }
 
-    public void hide(){
+    public void hide() {
         AddFriendFrame.setVisible(false);
     }
 
     public static void main(String[] args) {
         AddFriendFrame addFriendFrame = new AddFriendFrame();
         List<LoadUserRespond.LoadUser> loadUsers = new ArrayList<>();
-        loadUsers.add(new LoadUserRespond.LoadUser(1, "ahahahaa"));
+        for (int i = 0; i < 210; i++) {
+            loadUsers.add(new LoadUserRespond.LoadUser(i, "" + i));
+        }
+
         addFriendFrame.displayUserList(loadUsers);
 
 
+    }
+    class RoundedBorder implements Border {
+        int radius;
+        RoundedBorder(int radius) {
+            this.radius = radius;
+        }
+        public Insets getBorderInsets(Component c) {
+            return new Insets(this.radius+1, this.radius+1, this.radius+2, this.radius);
+        }
+        public boolean isBorderOpaque() {
+            return true;
+        }
+        public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
+            g.drawRoundRect(x,y,width-1,height-1,radius,radius);
+        }
     }
 }
 

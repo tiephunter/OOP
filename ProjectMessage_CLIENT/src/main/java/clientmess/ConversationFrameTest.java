@@ -18,10 +18,11 @@ public class ConversationFrameTest {
     JLabel lbReceivedMessage;
     JPanel panelTextChat;
     JButton backToHome;
-     JFileChooser  fileDialog;
+    JFileChooser fileDialog;
     Mess message;
-    public ConversationFrameTest(ChatRespond chatRespond){
-        try{
+
+    public ConversationFrameTest(ChatRespond chatRespond) {
+        try {
             //read data from server
             int idUser = chatRespond.getIdUser();
             int idFriend = chatRespond.getIdFriend();
@@ -35,7 +36,7 @@ public class ConversationFrameTest {
             frameConversation.setForeground(Color.gray);
             JPanel panelCon = new JPanel();
             //create panelConversation
-            panelConversation = new JPanel()  ;
+            panelConversation = new JPanel();
             panelConversation.setLayout(new FlowLayout());
             panelConversation.setPreferredSize(new Dimension(380, 400));
 //            panelConversation.setBorder(new EmptyBorder(150, 100, 50, 100));
@@ -71,13 +72,13 @@ public class ConversationFrameTest {
 
                 if (idUser == idSender) {
                     lbMsg = new JLabel(textMsg);
-                    lbMsg.setPreferredSize(new Dimension(10,10));
+                    lbMsg.setPreferredSize(new Dimension(10, 10));
                     lbMsg.setHorizontalAlignment(SwingConstants.RIGHT);
                     panelConversation.add(lbMsg);
                     panelConversation.updateUI();
                 } else {
                     lbMsg = new JLabel(textMsg);
-                    lbMsg.setPreferredSize(new Dimension(10,10));
+                    lbMsg.setPreferredSize(new Dimension(10, 10));
                     lbMsg.setHorizontalAlignment(JLabel.LEFT);
                     panelConversation.add(lbMsg);
                     panelConversation.updateUI();
@@ -99,7 +100,7 @@ public class ConversationFrameTest {
                 public void actionPerformed(ActionEvent e) {
                     try {
                         System.out.println("sesion id " + sessionId);
-                        SendMessageRequest sendMessageRequest = new SendMessageRequest(AppMessenger.SEND_MESSAGE_ACTION, sessionId, tfInputMessage.getText(),idUser,idFriend);
+                        SendMessageRequest sendMessageRequest = new SendMessageRequest(AppMessenger.SEND_MESSAGE_ACTION, sessionId, tfInputMessage.getText(), idUser, idFriend);
                         String json = AppMessenger.mapper.writeValueAsString(sendMessageRequest);
                         AppMessenger.out.writeUTF(json);
                         AppMessenger.out.flush();
@@ -118,10 +119,10 @@ public class ConversationFrameTest {
 
             //panel add to component
             //create JscrollpaneChat
-            JScrollPane spChat = new JScrollPane(panelConversation, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+            JScrollPane spChat = new JScrollPane(panelConversation, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
             spChat.setPreferredSize(new Dimension(400, 400));
             JScrollBar sb = spChat.getVerticalScrollBar();
-            sb.setValue( sb.getMaximum() );
+            sb.setValue(sb.getMaximum());
             spChat.updateUI();
 
             //panleCon add component
@@ -137,8 +138,7 @@ public class ConversationFrameTest {
             frameConversation.add(panelCon);
             frameConversation.setLayout(new GridLayout(1, 1));
             frameConversation.setVisible(true);
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

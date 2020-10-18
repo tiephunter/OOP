@@ -1,7 +1,6 @@
 package clientmess.payload;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class CreateGroupRequest extends BasePayload {
     private ArrayList<Member> membersList;

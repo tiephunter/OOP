@@ -4,6 +4,7 @@ public class AddFriendRequest extends BasePayload {
     private int idUser;
     private int idFriend;
     private String FriendName;
+
     public AddFriendRequest() {
     }
 

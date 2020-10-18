@@ -9,19 +9,16 @@ import clientmess.payload.*;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import java.awt.*;
-import java.io.*;
-import java.net.Socket;
-
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.List;
 import javax.swing.*;
+import java.awt.*;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.net.Socket;
+import java.net.UnknownHostException;
+import java.util.List;
 
 /**
- *
  * @author cmtie
  */
 public class AppMessenger {
@@ -63,7 +60,7 @@ public class AppMessenger {
     private static LogInFrame logInFrame;
     private static ConversationFrame conversationFrame;
     private static GroupConversationFrame groupConversationFrame;
-    private static  SigUpFrame sigUpFrame;
+    private static SigUpFrame sigUpFrame;
     private static FriendListFrame friendListFrame;
     private static CreateGroupFrame createGroupFrame;
     private static GroupFrame groupFrame;
@@ -89,7 +86,7 @@ public class AppMessenger {
     }
 
 
-    public static void handleSigUpAction( SignUpResponse signUpResponse) throws Exception{
+    public static void handleSigUpAction(SignUpResponse signUpResponse) throws Exception {
         String input = signUpResponse.getMessage();
         System.out.println(input);
         sigUpFrame.tfTenTK.setText("");
@@ -103,9 +100,9 @@ public class AppMessenger {
         JOptionPane.showMessageDialog(null, input);
     }
 
-    public static void handleLogInAction(LogInRespond logInRespond) throws Exception{
+    public static void handleLogInAction(LogInRespond logInRespond) throws Exception {
         int LogInResult = logInRespond.getState();
-        if(LogInResult == LOGIN_SUCCESS){
+        if (LogInResult == LOGIN_SUCCESS) {
             System.out.println("input Log in");
             idUser = logInRespond.getIdUser();
             JOptionPane.showMessageDialog(null, "Đăng Nhập Thành Công");
@@ -113,181 +110,117 @@ public class AppMessenger {
             mainFrame = new MainFrame(idUser);
             logInFrame.hide();
             //
-        }
-        else if (LogInResult == LOGIN_FALSE) {
+        } else if (LogInResult == LOGIN_FALSE) {
             JOptionPane.showMessageDialog(null, "Nhập sai tài khoản hoặc mật khẩu");
             logInFrame.tfAccount.setText("");
             logInFrame.tfPass.setText("");
         }
     }
 
-    public static void handleLoadUserListAction(LoadUserRespond loadUserRespond ) throws Exception{
+    public static void handleLoadUserListAction(LoadUserRespond loadUserRespond) throws Exception {
         addFriendFrame.displayUserList(loadUserRespond.getLoadUserList());
     }
 
     public static void handleAddFriendAction(AddFriendRespond addFriendRespond) throws Exception {
         int result = addFriendRespond.getState();
-        if (result == ADD_FRIEND_SUCCESS){
+        if (result == ADD_FRIEND_SUCCESS) {
             JOptionPane.showMessageDialog(null, "Kết Bạn Thành Công!!!");
-        }
-        else if (result == ADD_FRIEND_FAIL){
+        } else if (result == ADD_FRIEND_FAIL) {
             JOptionPane.showMessageDialog(null, "Kết Bạn Thất Bại !!!");
 
         }
     }
 
-    public static void handleLoadFriendListAction(LoadFriendRespond loadFriendRespond) throws Exception{
+    public static void handleLoadFriendListAction(LoadFriendRespond loadFriendRespond) throws Exception {
         friendListFrame.displayFriendList(loadFriendRespond.getLoadFriendsList());
 
     }
-    public static void handleCreateGroup(LoadFriendGroupRespond loadFriendGroupRespond) throws Exception{
+
+    public static void handleCreateGroup(LoadFriendGroupRespond loadFriendGroupRespond) throws Exception {
         createGroupFrame.displayCreate(loadFriendGroupRespond);
-//        int AmountFriends = in.readInt();
-//        int idUser = loadFriendGroupRespond.getIdUser();
-//        //member list
-//        ArrayList<Member> memberList = new ArrayList<>();
-//        Member member = new Member(idUser,"");
-//        memberList.add(member);
-//        for (LoadFriendGroupRespond.LoadFriend loadFriend: loadFriendGroupRespond.getLoadFriendList()){
-//            System.out.println("Amount Friends "+loadFriendGroupRespond.getLoadFriendList().size());
-//            int idFriend = loadFriend.getIdFriend();
-//            String TenTaiKhoanFriend = loadFriend.getAccountName();
-//            String HoTenFriend = loadFriend.getAccountName();
-//            //set label and button
-//            System.out.println("Create Group" );
-//            System.out.println("TenTaiKhoanFriend" + TenTaiKhoanFriend);
-//            createGroupFrame.labelTenTkFriend = new JLabel(TenTaiKhoanFriend);
-//
-//            //action create group button
-//            createGroupFrame.btnAddToGroup = new JButton("Add to Gr");
-//            createGroupFrame.btnAddToGroup.setSize(20, 20);
-//            createGroupFrame.btnAddToGroup.setForeground(Color.black);
-//            createGroupFrame.btnAddToGroup.setFocusPainted(false);
-//            createGroupFrame.btnAddToGroup.addActionListener(new ActionListener() {
-//                @Override
-//                public void actionPerformed(ActionEvent e) {
-//                    try {
-//                        Member member = new Member(idFriend,TenTaiKhoanFriend);
-//                        memberList.add(member);
-//                        createGroupFrame.btnAddToGroup.setVisible(false);
-//
-//                    } catch (Exception e1) {
-//                        e1.printStackTrace();
-//                    }
-//
-//                }
-//            });
-//            createGroupFrame.friendListPanel.add(createGroupFrame.labelTenTkFriend);
-//            createGroupFrame.friendListPanel.add(createGroupFrame.btnAddToGroup);
-//        }
-//        System.out.println("stop heatre");
-//        JButton btnCreateGroup = new JButton("Create Gr");
-//        btnCreateGroup.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                try {
-//                    CreateGroupRequest createGroupRequest = new CreateGroupRequest(CREATE_GROUP_ACTION,memberList);
-//                    String json = mapper.writeValueAsString(createGroupRequest);
-//                    out.writeUTF(json);
-//                    out.flush();
-//                    System.out.println("gửi yêu cầu add gr");
-//                }catch (Exception e1){
-//                    System.out.println("Exception chat group");
-//                    e1.printStackTrace();
-//                }
-//            }
-//        });
-//        createGroupFrame.friendListPanel.add(btnCreateGroup);
-//        createGroupFrame.friendListPanel.updateUI();
+
+
     }
 
-    public static void handleLoadGroupList(LoadGroupListRespond loadGroupListRespond){
+    public static void handleLoadGroupList(LoadGroupListRespond loadGroupListRespond) {
         List<LoadGroupListRespond.Group> groups = loadGroupListRespond.getGroupList();
 
         groupFrame = new GroupFrame(groups);
         mainFrame.hide();
     }
 
-    public static void handleChatAction(ChatRespond chatRespond) throws Exception{
+    public static void handleChatAction(ChatRespond chatRespond) throws Exception {
         int success = chatRespond.getStateChat();
-        if (success == CHAT_ACTION_SUCESS){
+        if (success == CHAT_ACTION_SUCESS) {
 
             conversationFrame = new ConversationFrame(chatRespond);
             friendListFrame.hide();
             System.out.println("done handle chat action");
-        }
-        else {
-            JOptionPane.showMessageDialog(null,"Can not Chat");
+        } else {
+            JOptionPane.showMessageDialog(null, "Can not Chat");
         }
 
     }
 
-    public static void handleReceiverMessage(SendMessageRespond sendMessageRespond) throws Exception  {
-        System.out.println("nhan dc message luc onl");
-        int Message = sendMessageRespond.getUserState();
-        if (Message == RECEIVED_MESSENGER_NOW ) {
-            int idMsg = sendMessageRespond.getIdMsg();
-            int idSession = sendMessageRespond.getIdSession();
-            int idUser = sendMessageRespond.getIdUser();
-            String tfInputMsg = sendMessageRespond.getTfInputMsg();
-            conversationFrame.lbReceivedMessage = new JLabel(tfInputMsg, JLabel.LEFT);
-            conversationFrame.panelConversation.add(conversationFrame.lbReceivedMessage);
-            conversationFrame.lbReceivedMessage.setAlignmentX(Component.LEFT_ALIGNMENT);
-            conversationFrame.panelConversation.updateUI();
-            System.out.println("Nhận được lúc onl");
-        }
-        else{
-            System.out.println("Không nhan được tin nhắn");
-        }
+    public static void handleReceiverMessage(SendMessageRespond sendMessageRespond) throws Exception {
+        conversationFrame.displayOnlMessage(sendMessageRespond);
     }
-    public static void handleChatGroupAction(ChatGroupRespond chatGroupRespond){
+
+    public static void handleChatGroupAction(ChatGroupRespond chatGroupRespond) {
         groupConversationFrame = new GroupConversationFrame(chatGroupRespond);
         groupFrame.hide();
         System.out.println("done handle chat action");
 
     }
-    public static void hadleReceiverGroupMessage(SendMessgeGroupRespond sendMessgeGroupRespond){
+
+    public static void hadleReceiverGroupMessage(SendMessgeGroupRespond sendMessgeGroupRespond) {
         try {
+            groupConversationFrame.displayOnlGroupMessage(sendMessgeGroupRespond);
+//            System.out.println("nhan dc message luc onl");
+//            int idMsg = sendMessgeGroupRespond.getIdMsg();
+//            int idSession = sendMessgeGroupRespond.getIdSession();
+//            int idUser = sendMessgeGroupRespond.getIdUser();
+//            String tfInputMsg = sendMessgeGroupRespond.getTfInputMsg();
+//            groupConversationFrame.lbReceivedMessage = new JLabel(tfInputMsg, JLabel.LEFT);
+//            groupConversationFrame.panelConversation.add(groupConversationFrame.lbReceivedMessage);
+//            groupConversationFrame.lbReceivedMessage.setAlignmentX(Component.LEFT_ALIGNMENT);
+//            groupConversationFrame.panelConversation.updateUI();
+//            System.out.println("Nhận được lúc onl");
 
-            System.out.println("nhan dc message luc onl");
-                int idMsg = sendMessgeGroupRespond.getIdMsg();
-                int idSession = sendMessgeGroupRespond.getIdSession();
-                int idUser = sendMessgeGroupRespond.getIdUser();
-                String tfInputMsg = sendMessgeGroupRespond.getTfInputMsg();
-                groupConversationFrame.lbReceivedMessage = new JLabel(tfInputMsg, JLabel.LEFT);
-                groupConversationFrame.panelConversation.add(groupConversationFrame.lbReceivedMessage);
-                groupConversationFrame.lbReceivedMessage.setAlignmentX(Component.LEFT_ALIGNMENT);
-                groupConversationFrame.panelConversation.updateUI();
-                System.out.println("Nhận được lúc onl");
-
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public static void displaySigUpFrame(){
+    public static void displaySigUpFrame() {
         sigUpFrame = new SigUpFrame();
     }
-    public static void displayLogInFrame(){
+
+    public static void displayLogInFrame() {
         logInFrame = new LogInFrame();
     }
-    public static void displayAddFriendFrame(){
+
+    public static void displayAddFriendFrame() {
         addFriendFrame = new AddFriendFrame();
     }
-    public static void displayLMainFrame(){
+
+    public static void displayLMainFrame() {
         mainFrame = new MainFrame(idUser);
     }
-    public static void displaySearchFriendListFrame(){
+
+    public static void displaySearchFriendListFrame() {
         friendListFrame = new FriendListFrame();
         friendListFrame.sendData();
 
     }
-    public static void displaySearchFriendListFrameToCreateGroup(){
+
+    public static void displaySearchFriendListFrameToCreateGroup() {
         createGroupFrame = new CreateGroupFrame();
         createGroupFrame.sendDataToCreateGroup();
 
     }
-    public static void displayConversationFrame(ChatRespond chatRespond){
+
+    public static void displayConversationFrame(ChatRespond chatRespond) {
         conversationFrame = new ConversationFrame(chatRespond);
     }
 //    public static void displayCreateGroupFrame(){
@@ -308,57 +241,59 @@ public class AppMessenger {
 class ThreadHandleInput extends Thread {
 
     DataInputStream in;
-    public ThreadHandleInput(DataInputStream in){
+
+    public ThreadHandleInput(DataInputStream in) {
         this.in = in;
     }
-    public void run(){
+
+    public void run() {
         try {
             //take input from server
-            while (true){
+            while (true) {
                 if (in.available() > 0) {
                     String json = in.readUTF();
-                    BasePayload basePayload = AppMessenger.mapper.readValue(json,BasePayload.class);
+                    BasePayload basePayload = AppMessenger.mapper.readValue(json, BasePayload.class);
                     int action = basePayload.getAction();
                     switch (action) {
                         case AppMessenger.SIGNUP_ACTION:
                             System.out.println("Handle Sig up Action");
-                            SignUpResponse signUpResponse = AppMessenger.mapper.readValue(json,SignUpResponse.class);
+                            SignUpResponse signUpResponse = AppMessenger.mapper.readValue(json, SignUpResponse.class);
                             AppMessenger.handleSigUpAction(signUpResponse);
                             break;
                         case AppMessenger.LOGIN_ACTION:
                             System.out.println("Handle Log In Action");
-                            LogInRespond logInRespond = AppMessenger.mapper.readValue(json,LogInRespond.class);
+                            LogInRespond logInRespond = AppMessenger.mapper.readValue(json, LogInRespond.class);
                             AppMessenger.handleLogInAction(logInRespond);
                             break;
                         case AppMessenger.LOAD_USER_lIST_ACTION:
                             System.out.println("Handle Load User List Action");
-                            LoadUserRespond loadUserRespond = AppMessenger.mapper.readValue(json,LoadUserRespond.class);
+                            LoadUserRespond loadUserRespond = AppMessenger.mapper.readValue(json, LoadUserRespond.class);
                             AppMessenger.handleLoadUserListAction(loadUserRespond);
                             break;
                         case AppMessenger.ADD_FRIEND_ACTION:
                             System.out.println("Handle Add friend Action");
-                            AddFriendRespond addFriendRespond = AppMessenger.mapper.readValue(json,AddFriendRespond.class);
+                            AddFriendRespond addFriendRespond = AppMessenger.mapper.readValue(json, AddFriendRespond.class);
                             AppMessenger.handleAddFriendAction(addFriendRespond);
                             break;
                         case AppMessenger.LOAD_FRIEND_LIST_ACTION:
                             System.out.println("Handle Load Friend List Action");
-                            LoadFriendRespond loadFriendRespond = AppMessenger.mapper.readValue(json,LoadFriendRespond.class);
+                            LoadFriendRespond loadFriendRespond = AppMessenger.mapper.readValue(json, LoadFriendRespond.class);
                             AppMessenger.handleLoadFriendListAction(loadFriendRespond);
                             break;
                         case AppMessenger.LOAD_FRIEND_LIST_ACTION_TO_CREATE_GROUP:
                             System.out.println("Handle Load friend list to Create Group");
-                            LoadFriendGroupRespond loadFriendGroupRespond = AppMessenger.mapper.readValue(json,LoadFriendGroupRespond.class);
+                            LoadFriendGroupRespond loadFriendGroupRespond = AppMessenger.mapper.readValue(json, LoadFriendGroupRespond.class);
                             AppMessenger.handleCreateGroup(loadFriendGroupRespond);
                             break;
                         case AppMessenger.CREATE_GROUP_ACTION:
                             System.out.println("Handle Create Group ACtion");
-                            CreateGroupRespond createGroupRespond = AppMessenger.mapper.readValue(json,CreateGroupRespond.class);
+                            CreateGroupRespond createGroupRespond = AppMessenger.mapper.readValue(json, CreateGroupRespond.class);
                             String state = createGroupRespond.getState();
-                            System.out.println(""+state);
+                            JOptionPane.showMessageDialog(null,state);
                             break;
                         case AppMessenger.LOAD_GROUP_ACTION:
                             System.out.println("Load Group List ");
-                            LoadGroupListRespond loadGroupListRespond = AppMessenger.mapper.readValue(json,LoadGroupListRespond.class);
+                            LoadGroupListRespond loadGroupListRespond = AppMessenger.mapper.readValue(json, LoadGroupListRespond.class);
                             AppMessenger.handleLoadGroupList(loadGroupListRespond);
                             break;
                         case AppMessenger.CHAT_ACTION:
@@ -368,24 +303,23 @@ class ThreadHandleInput extends Thread {
                             break;
                         case AppMessenger.RECEIVED_MESSAGE_ACTION:
                             System.out.println(" Received Message");
-                            SendMessageRespond sendMessageRespond = AppMessenger.mapper.readValue(json,SendMessageRespond.class);
+                            SendMessageRespond sendMessageRespond = AppMessenger.mapper.readValue(json, SendMessageRespond.class);
                             AppMessenger.handleReceiverMessage(sendMessageRespond);
                             break;
                         case AppMessenger.CHAT_GROUP_ACTION:
                             System.out.println("Handle Chat Group Action");
-                            ChatGroupRespond chatGroupRespond = AppMessenger.mapper.readValue(json,ChatGroupRespond.class);
+                            ChatGroupRespond chatGroupRespond = AppMessenger.mapper.readValue(json, ChatGroupRespond.class);
                             AppMessenger.handleChatGroupAction(chatGroupRespond);
                             break;
                         case AppMessenger.RECEIVED_MESSAGE_GROUP_ACTION:
                             System.out.println("Received Message Group");
-                            SendMessgeGroupRespond sendMessgeGroupRespond = AppMessenger.mapper.readValue(json,SendMessgeGroupRespond.class);
+                            SendMessgeGroupRespond sendMessgeGroupRespond = AppMessenger.mapper.readValue(json, SendMessgeGroupRespond.class);
                             AppMessenger.hadleReceiverGroupMessage(sendMessgeGroupRespond);
                             break;
                     }
                 }
             }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

@@ -5,7 +5,7 @@ import java.util.List;
 public class LoadFriendGroupRespond extends BasePayload {
     private int idUser;
     private String accountName;
-    List<LoadFriend> loadFriendList ;
+    List<LoadFriend> loadFriendList;
 
     public LoadFriendGroupRespond() {
     }
@@ -41,7 +41,7 @@ public class LoadFriendGroupRespond extends BasePayload {
         this.loadFriendList = loadFriendList;
     }
 
-    public static class LoadFriend{
+    public static class LoadFriend {
         private int idFriend;
         private String accountName;
         private String friendName;
