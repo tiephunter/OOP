@@ -46,6 +46,8 @@ public class AppMessenger {
     final static int CHAT_GROUP_ACTION = 19;
     final static int SEND_MESSAGE_GROUP_ACTION = 20;
     final static int RECEIVED_MESSAGE_GROUP_ACTION = 21;
+    final static int CHAT_ACTION_MAIN = 22;
+    final static int LOAD_FRIEND_IN_MAIN_FRAME = 23;
     final static int LOAD_FRIEND_LIST_ACTION_TO_CREATE_GROUP = 70;
 
 
@@ -108,13 +110,18 @@ public class AppMessenger {
             JOptionPane.showMessageDialog(null, "Đăng Nhập Thành Công");
             //display home frame and hide login Frame
             mainFrame = new MainFrame(idUser);
+//            mainFrame.displayFriendList(logInRespond.getLoadFriendsList());
             logInFrame.hide();
             //
         } else if (LogInResult == LOGIN_FALSE) {
-            JOptionPane.showMessageDialog(null, "Nhập sai tài khoản hoặc mật khẩu");
+            JOptionPane.showMessageDialog(null, "Sai tài khoản rồi babea !,\n " +
+                    " MK của bạn có thể là 123");
             logInFrame.tfAccount.setText("");
             logInFrame.tfPass.setText("");
         }
+    }
+    public static void handleLoadFriendInMainFrame(LoadFriendRespond loadFriendRespond) throws Exception{
+        mainFrame.displayFriendList(loadFriendRespond.getLoadFriendsList());
     }
 
     public static void handleLoadUserListAction(LoadUserRespond loadUserRespond) throws Exception {
@@ -148,6 +155,9 @@ public class AppMessenger {
         groupFrame = new GroupFrame(groups);
         mainFrame.hide();
     }
+//    public static  void hideFriendListFrame(){
+//        AppMessenger.friendListFrame.hide();
+//    }
 
     public static void handleChatAction(ChatRespond chatRespond) throws Exception {
         int success = chatRespond.getStateChat();
@@ -155,11 +165,24 @@ public class AppMessenger {
 
             conversationFrame = new ConversationFrame(chatRespond);
             friendListFrame.hide();
+//            hideFriendListFrame();
             System.out.println("done handle chat action");
         } else {
             JOptionPane.showMessageDialog(null, "Can not Chat");
         }
 
+    }
+    public static void handleChatActionInMain(ChatRespond chatRespondInMain) throws Exception{
+        int success = chatRespondInMain.getStateChat();
+        if (success == CHAT_ACTION_SUCESS) {
+
+            conversationFrame = new ConversationFrame(chatRespondInMain);
+            mainFrame.hide();
+//            hideFriendListFrame();
+            System.out.println("done handle chat action");
+        } else {
+            JOptionPane.showMessageDialog(null, "Can not Chat");
+        }
     }
 
     public static void handleReceiverMessage(SendMessageRespond sendMessageRespond) throws Exception {
@@ -285,6 +308,11 @@ class ThreadHandleInput extends Thread {
                             LoadFriendGroupRespond loadFriendGroupRespond = AppMessenger.mapper.readValue(json, LoadFriendGroupRespond.class);
                             AppMessenger.handleCreateGroup(loadFriendGroupRespond);
                             break;
+                        case AppMessenger.LOAD_FRIEND_IN_MAIN_FRAME:
+                            System.out.println("Handle Load Friend List in Main frame");
+                            LoadFriendRespond loadFriendRespond1 = AppMessenger.mapper.readValue(json,LoadFriendRespond.class);
+                            AppMessenger.handleLoadFriendInMainFrame(loadFriendRespond1);
+                            break;
                         case AppMessenger.CREATE_GROUP_ACTION:
                             System.out.println("Handle Create Group ACtion");
                             CreateGroupRespond createGroupRespond = AppMessenger.mapper.readValue(json, CreateGroupRespond.class);
@@ -300,6 +328,11 @@ class ThreadHandleInput extends Thread {
                             System.out.println("Handle Chat Action");
                             ChatRespond chatRespond = AppMessenger.mapper.readValue(json, ChatRespond.class);
                             AppMessenger.handleChatAction(chatRespond);
+                            break;
+                        case AppMessenger.CHAT_ACTION_MAIN:
+                            System.out.println("Handle Chat Action in Main");
+                            ChatRespond chatRespondInMain = AppMessenger.mapper.readValue(json, ChatRespond.class);
+                            AppMessenger.handleChatActionInMain(chatRespondInMain);
                             break;
                         case AppMessenger.RECEIVED_MESSAGE_ACTION:
                             System.out.println(" Received Message");

@@ -32,18 +32,22 @@ public class FriendListFrame {
         searchFriendListFrame.setLocationRelativeTo(searchFriendListFrame);
         searchFriendListFrame.setResizable(true);
         searchFriendListFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        searchFriendListFrame.setBackground(new java.awt.Color(0 ,191 ,255));
+//        searchFriendListFrame.setBackground(new java.awt.Color(0 ,191 ,255));
+//        searchFriendListFrame.setForeground(new java.awt.Color(0 ,191 ,255));
         //
         //create PanelHome and panel Search Friend
         panelButton = new JPanel();
         panelButton.setPreferredSize(new Dimension(400, 50));
         panelButton.setLayout((new FlowLayout(FlowLayout.LEFT)));
-        panelButton.setBackground(Color.white);
+        panelButton.setBackground(new java.awt.Color(205 ,201 ,165));
+//        panelButton.setForeground(new java.awt.Color(0 ,191 ,255));
         //create button back to home
-        backToHome = new JButton("< Back");
+        Icon backIcon = new ImageIcon("D:\\OOP\\code\\ProjectMessage_CLIENT\\image\\backBtn.png");
+        backToHome = new JButton(backIcon);
+        backToHome.setBorderPainted(false);
         backToHome.setFocusPainted(false);
-        backToHome.setBackground(Color.white);
-        backToHome.setForeground(new java.awt.Color(0 ,191 ,255));
+        backToHome.setBackground(new java.awt.Color(205 ,201 ,165));
+//        backToHome.setForeground(new java.awt.Color(0 ,191 ,255));
         backToHome.setBorder(new RoundedBorder(10));
         backToHome.addActionListener(new ActionListener() {
             @Override
@@ -55,12 +59,11 @@ public class FriendListFrame {
         //create panel
         searchFriendListPanel = new JPanel();
         searchFriendListPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-        searchFriendListPanel.setBackground(Color.white);
+        searchFriendListPanel.setBackground(new java.awt.Color(205 ,201 ,165));
 
         //
         spLoadUser = new JScrollPane(searchFriendListPanel, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         spLoadUser.setPreferredSize(new Dimension(380, 450));
-        spLoadUser.setBackground(Color.white);
 
 
         //add component to panel and frame
@@ -87,15 +90,17 @@ public class FriendListFrame {
             System.out.println("TenTaiKhoanFriend" + TenTaiKhoanFriend);
             JLabel labelTenTkFriend = new JLabel(TenTaiKhoanFriend);
             labelTenTkFriend.setPreferredSize(new Dimension(200, 50));
-            labelTenTkFriend.setBackground(Color.white);
-            labelTenTkFriend.setForeground(new java.awt.Color(0 ,191 ,255));
+            labelTenTkFriend.setBackground(new java.awt.Color(139 ,137 ,112));
+//            labelTenTkFriend.setForeground(Color.black);
             labelTenTkFriend.setBorder(new RoundedBorder(10));
             //create button
-            btnChat = new JButton("CHAT");
+            Icon chatIcon = new ImageIcon("D:\\OOP\\code\\ProjectMessage_CLIENT\\image\\chatBtn.png");
+            btnChat = new JButton(chatIcon);
             btnChat.setFocusPainted(false);
+            btnChat.setBorderPainted(false);
             btnChat.setForeground(Color.black);
-            btnChat.setBackground(new java.awt.Color(0 ,191 ,255));
-            btnChat.setBorder(new RoundedBorder(10));
+            btnChat.setBackground(new java.awt.Color(205 ,201 ,165));
+//            btnChat.setBorder(new RoundedBorder(10));
             btnChat.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {

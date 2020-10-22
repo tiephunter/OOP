@@ -31,8 +31,8 @@ public class LogInFrame {
         //set Layout for panel;
         panleLogIn.setLayout(new BoxLayout(panleLogIn, BoxLayout.Y_AXIS));
         panleLogIn.setBorder(new EmptyBorder(50, 50, 100, 70));
-        panleLogIn.setBackground(new java.awt.Color(135, 206 ,255));
-        panleLogIn.setForeground(Color.black);
+        panleLogIn.setBackground(new java.awt.Color(205 ,201 ,165));
+//        panleLogIn.setForeground(Color.black);
         panleLogIn.setBorder(new RoundedBorder(20));
 //        panleLogIn.setBackground(Color.GRAY);
 
@@ -44,12 +44,15 @@ public class LogInFrame {
         JLabel labelMatKhau = new JLabel("Password", JLabel.LEFT);
         tfAccount = new JTextField("", JTextField.LEFT);
         tfPass = new JPasswordField("", JPasswordField.LEFT);
-
-        btnLogIn = new JButton("Đăng Nhập");
-        btnLogIn.setBackground(new java.awt.Color(255 ,255, 0));
+        //create Login button
+        Icon logInIcon = new ImageIcon("D:\\OOP\\code\\ProjectMessage_CLIENT\\image\\logInBtn.png");
+        btnLogIn = new JButton(logInIcon);
+//        btnLogIn.setBorderPainted(false);
+        btnLogIn.setBackground(new java.awt.Color(205 ,201 ,165));
 //        btnLogIn.setForeground(Color.black);
         btnLogIn.setBorder(new RoundedBorder(10));
         btnLogIn.setFocusPainted(false);
+        btnLogIn.setBorderPainted(false);
         btnLogIn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -73,11 +76,14 @@ public class LogInFrame {
 
             }
         });
-
-        btnSignUp = new JButton("Đăng Kí");
-        btnSignUp.setBackground(new java.awt.Color(255 ,255, 0));
+        //create Sign up btn
+        Icon signUpIcon = new ImageIcon("D:\\OOP\\code\\ProjectMessage_CLIENT\\image\\createNewAccountBtn.png");
+        btnSignUp = new JButton(signUpIcon);
+        btnSignUp.setBackground(new java.awt.Color(205 ,201 ,165));
+        btnSignUp.setBorderPainted(false);
 //        btnSignUp.setForeground(Color.black);
         btnSignUp.setBorder(new RoundedBorder(10));
+//        btnSignUp.
         btnSignUp.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

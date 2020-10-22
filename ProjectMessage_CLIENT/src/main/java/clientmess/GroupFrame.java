@@ -5,6 +5,7 @@ import clientmess.payload.LoadGroupListRespond;
 
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -16,6 +17,7 @@ public class GroupFrame {
     JPanel groupListPanel;
     JPanel btnPanel;
     JButton sessionNameBtn;
+    JButton chatBtn;
     JButton backToHome;
     JScrollPane groupSp;
     List<LoadGroupListRespond.Group> groupList;
@@ -33,22 +35,23 @@ public class GroupFrame {
         //create groupList panel
         groupListPanel = new JPanel();
         groupListPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-        groupListPanel.setBackground(Color.white);
+        groupListPanel.setBackground(new java.awt.Color(205 ,201 ,165));
+        groupListPanel.setPreferredSize(new Dimension(400,600));
 
         //create Scroll pane
         groupSp = new JScrollPane(groupListPanel, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        groupSp.setPreferredSize(new Dimension(380, 500));
-        groupSp.setBackground(Color.white);
+        groupSp.setPreferredSize(new Dimension(380, 550));
         //create BtnPanel
         btnPanel = new JPanel();
         btnPanel.setPreferredSize(new Dimension(400, 50));
         btnPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-        btnPanel.setBackground(Color.white);
+        btnPanel.setBackground(new java.awt.Color(205 ,201 ,165));
         //create button back to home
-        backToHome = new JButton("< Back");
+        Icon backBtnIcon = new ImageIcon("D:\\OOP\\code\\ProjectMessage_CLIENT\\image\\backBtn.png");
+        backToHome = new JButton(backBtnIcon);
         backToHome.setFocusPainted(false);
-        backToHome.setBackground(Color.white);
-        backToHome.setForeground(new java.awt.Color(0 ,191 ,255));
+        backToHome.setBorderPainted(false);
+        backToHome.setBackground(new java.awt.Color(205 ,201 ,165));
         backToHome.setBorder(new RoundedBorder(10));
         backToHome.addActionListener(new ActionListener() {
             @Override
@@ -59,24 +62,33 @@ public class GroupFrame {
             }
         });
         //create session name button
-        int width = 400;
-        int height = 0;
+//        int width = 400;
+//        int height = 0;
         for (LoadGroupListRespond.Group group : groupList) {
             //
-            height += 55;
+//            height += 55;
             JPanel groupPanel = new JPanel();
             groupPanel.setPreferredSize(new Dimension(400, 50));
             groupPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-            groupPanel.setBackground(Color.white);
+            groupPanel.setBackground(new java.awt.Color(205 ,201 ,165));
             String sessionName = group.getSessionName();
             sessionNameBtn = new JButton(sessionName);
             System.out.println("session name" + sessionName);
             sessionNameBtn.setFocusPainted(false);
-//                    msgBtn.setEnabled(false);
-            sessionNameBtn.setBackground(new java.awt.Color(30 ,144 ,255));
-            sessionNameBtn.setForeground(Color.black);
+            sessionNameBtn.setBorderPainted(false);
+//            sessionNameBtn.setBackground(new java.awt.Color(30 ,144 ,255));
+            sessionNameBtn.setBackground(new java.awt.Color(139,137,112));
             sessionNameBtn.setBorder(new RoundedBorder(10));
-            sessionNameBtn.addActionListener(new ActionListener() {
+            sessionNameBtn.setPreferredSize(new Dimension(200, 50));
+            //create ChatBtn
+            Icon ChatBtnIcon = new ImageIcon("D:\\OOP\\code\\ProjectMessage_CLIENT\\image\\chatBtn.png");
+            chatBtn = new JButton(ChatBtnIcon);
+            chatBtn.setFocusPainted(false);
+            chatBtn.setForeground(Color.black);
+            chatBtn.setBorderPainted(false);
+            chatBtn.setBackground(new java.awt.Color(205 ,201 ,165));
+            chatBtn.setBorder(new RoundedBorder(10));
+            chatBtn.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     try {
@@ -91,10 +103,11 @@ public class GroupFrame {
                 }
             });
             groupPanel.add(sessionNameBtn);
+            groupPanel.add(chatBtn);
             groupListPanel.add(groupPanel);
 
         }
-        groupListPanel.setPreferredSize(new Dimension(width, height));
+//        groupListPanel.setPreferredSize(new Dimension(width, height));
         groupListPanel.revalidate();
         groupListPanel.repaint();
 
@@ -127,4 +140,8 @@ public class GroupFrame {
     public void hide() {
         groupListFrame.setVisible(false);
     }
+
+//    public static void main(String[] args) {
+//        GroupFrame f = new GroupFrame();
+//    }
 }

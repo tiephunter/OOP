@@ -128,6 +128,7 @@ public class CreateGroupFrame {
             labelTenTkFriend.setBackground(Color.white);
             labelTenTkFriend.setForeground(new java.awt.Color(0 ,191 ,255));
             labelTenTkFriend.setBorder(new RoundedBorder(10));
+            labelTenTkFriend.setPreferredSize(new Dimension(200, 50));
             //action create group button
             btnAddToGroup = new JButton("Add to Gr");
             btnAddToGroup.setSize(20, 20);

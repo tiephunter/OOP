@@ -21,32 +21,31 @@ public class SigUpFrame {
     JTextField tfDiaChi;
     JTextField tfQueQuan;
     JTextField tfEmail;
-
+    JPanel panelPrf;
     public SigUpFrame() {
         sigUpFrame = new JFrame("Form Đăng kí Tai Khoan");
         sigUpFrame.setSize(400, 600);
         sigUpFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         sigUpFrame.setLocationRelativeTo(null);
         sigUpFrame.setResizable(true);
-        sigUpFrame.getContentPane().setBackground(Color.orange);
+        sigUpFrame.setForeground(new java.awt.Color(205 ,201 ,165));
 
         //set layout for panel profile
         //set Layout for body
-        panelBody = new JPanel();
-        BoxLayout boxLayoutBody = new BoxLayout(panelBody, BoxLayout.Y_AXIS);
-        panelBody.setLayout(boxLayoutBody);
-        panelBody.setBorder(new EmptyBorder(50, 50, 50, 50));
-        panelBody.setBackground(Color.orange);
+//        panelBody = new JPanel();
+//        panelBody.setLayout(new FlowLayout());
+//        panelBody.setBorder(new EmptyBorder(20, 0, 20, 0));
+//        panelBody.setBackground(new java.awt.Color(205 ,201 ,165));
 
-        JPanel panelPrf = new JPanel();
+        panelPrf = new JPanel();
         BoxLayout boxPanelPrf = new BoxLayout(panelPrf, BoxLayout.Y_AXIS);
-        panelPrf.setLayout(boxPanelPrf);
-        panelPrf.setBorder(new EmptyBorder(50, 50, 50, 50));
-        panelPrf.setBackground(Color.gray);
-        panelBody.add(panelPrf);
+        panelPrf.setLayout(new FlowLayout());
+        panelPrf.setBorder(new EmptyBorder(50, 0, 0, 0));
+        panelPrf.setBackground(new java.awt.Color(205 ,201 ,165));
 
-        JLabel labelPrf = new JLabel("        Thông tin đăng kí          ");
-        JLabel labelhr = new JLabel("                         ----------              ");
+
+        JLabel labelPrf = new JLabel("                           Thông tin đăng kí          ");
+        JLabel labelhr = new JLabel("                                               ----------              ");
         JLabel labelTenTK = new JLabel("Tên Tài Khoản", JLabel.LEFT);
         JLabel labelMK = new JLabel("Mật Khẩu", JLabel.LEFT);
         JLabel labelHoTen = new JLabel("Họ Tên", JLabel.LEFT);
@@ -66,21 +65,22 @@ public class SigUpFrame {
         labelDiaChi.setFont(new Font("Tahoma", Font.BOLD, 12));
 
         //set text field
-        tfTenTK = new JTextField("", JTextField.LEFT);
-        tfMK = new JTextField("", JTextField.LEFT);
-        tfHoTen = new JTextField("", JTextField.LEFT);
-        tfNgaySinh = new JTextField("", JTextField.LEFT);
-        tfGioiTinh = new JTextField("", JTextField.LEFT);
+        tfTenTK = new JTextField("", 15);
+        tfMK = new JTextField("", 15);
+        tfHoTen = new JTextField("", 15);
+        tfNgaySinh = new JTextField("", 15);
+        tfGioiTinh = new JTextField("", 15);
         JLabel sexLb = new JLabel("Notice: Male = 0; Female = 1");
-        tfDiaChi = new JTextField("", JTextField.LEFT);
-        tfQueQuan = new JTextField("", JTextField.LEFT);
-        tfEmail = new JTextField("", JTextField.LEFT);
+        tfDiaChi = new JTextField("", 15);
+        tfQueQuan = new JTextField("", 15);
+        tfEmail = new JTextField("", 15);
 
         //create button Sing up
-        JButton btnDky = new JButton("Đăng Kí");
-        btnDky.setFont(new Font("Tahoma", Font.BOLD, 24));
-        btnDky.setBackground(Color.black);
+        Icon signUpBtn = new ImageIcon("D:\\OOP\\code\\ProjectMessage_CLIENT\\image\\signUpBtn.png");
+        JButton btnDky = new JButton(signUpBtn);
+        btnDky.setBackground(new java.awt.Color(205 ,201 ,165));
         btnDky.setForeground(Color.white);
+        btnDky.setBorderPainted(false);
         btnDky.setFocusPainted(false);
         btnDky.addActionListener(new ActionListener() {
             @Override
@@ -112,11 +112,12 @@ public class SigUpFrame {
         });
 
         //create button back to menu
-        JButton btnBack = new JButton("Back To MeNu");
-        btnBack.setFont(new Font("Tahoma", Font.BOLD, 12));
-        btnBack.setBackground(Color.black);
+        Icon backBtn = new ImageIcon("D:\\OOP\\code\\ProjectMessage_CLIENT\\image\\backBtn.png");
+        JButton btnBack = new JButton(backBtn);
+        btnBack.setBackground(new java.awt.Color(205 ,201 ,165));
         btnBack.setForeground(Color.white);
         btnBack.setFocusPainted(false);
+        btnBack.setBorderPainted(false);
         btnBack.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -150,8 +151,9 @@ public class SigUpFrame {
         //set Layout for panel
         panelPrf.setLayout(new BoxLayout(panelPrf, BoxLayout.Y_AXIS));
         //frame add content
-        sigUpFrame.setLayout(new GridLayout(1, 1));
-        sigUpFrame.add(panelBody);
+//        panelBody.add(panelPrf);
+        sigUpFrame.setLayout(new FlowLayout());
+        sigUpFrame.add(panelPrf);
         sigUpFrame.setVisible(true);
 
     }

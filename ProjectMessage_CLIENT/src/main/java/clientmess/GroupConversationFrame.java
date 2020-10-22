@@ -48,6 +48,7 @@ public class GroupConversationFrame {
             frameConversation.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             frameConversation.setBackground(Color.gray);
             frameConversation.setForeground(Color.gray);
+
             //panel Back button
             panelBackBtn = new JPanel();
             panelBackBtn.setLayout(new FlowLayout(FlowLayout.LEFT));

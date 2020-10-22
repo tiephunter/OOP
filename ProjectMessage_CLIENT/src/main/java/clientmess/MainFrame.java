@@ -1,6 +1,6 @@
 package clientmess;
 
-import clientmess.payload.LoadGroupListRequest;
+import clientmess.payload.*;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -8,6 +8,7 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 public class MainFrame {
     private int idUser;
@@ -23,16 +24,19 @@ public class MainFrame {
     JButton searchChatNameBtn;
     JScrollPane loadSessionSP;
     JButton groupBtn;
+    JButton btnChat;
+    JLabel labelTenTkFriend;
 
     final static int LOAD_GROUP_ACTION = 18;
 
     public MainFrame(int idUser) {
+
         this.idUser = idUser;
         chatListFrame = new JFrame("Home ");
-        chatListFrame.setSize(400, 600);
+        chatListFrame.setSize(420, 600);
         chatListFrame.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
         chatListFrame.setLocationRelativeTo(chatListFrame);
-        chatListFrame.setResizable(false);
+        chatListFrame.setResizable(true);
         chatListFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         chatListFrame.setBackground(Color.gray);
         chatListFrame.setForeground(Color.gray);
@@ -41,23 +45,25 @@ public class MainFrame {
         othersFunctionPanel.setPreferredSize(new Dimension(500, 70));
         othersFunctionPanel.setLayout((new FlowLayout(FlowLayout.LEFT)));
         othersFunctionPanel.setBorder(new EmptyBorder(0, 0, 0, 0));
-        othersFunctionPanel.setBackground(Color.white);
+        othersFunctionPanel.setBackground(new java.awt.Color(139,137,112));
         //
         searchPanel = new JPanel();
         searchPanel.setLayout((new FlowLayout()));
         searchPanel.setBorder(new EmptyBorder(0, 0, 0, 0));
-        searchPanel.setBackground(Color.white);
-        // panel Chat Name List
-        chatListPanel = new JPanel();
-        BoxLayout LayoutpanelSearchUser = new BoxLayout(chatListPanel, BoxLayout.Y_AXIS);
-        chatListPanel.setLayout(LayoutpanelSearchUser);
-        chatListPanel.setBorder(new EmptyBorder(0, 0, 400, 200));
-        chatListPanel.setBackground(Color.GRAY);
+        searchPanel.setBackground(new java.awt.Color(255,255,240));
+//        // panel Chat Name List
+//        chatListPanel = new JPanel();
+//        chatListPanel.setPreferredSize(new Dimension(500, 70));
+//        chatListPanel.setLayout((new FlowLayout(FlowLayout.LEFT)));
+//        chatListPanel.setBorder(new EmptyBorder(0, 0, 0, 0));
+//        chatListPanel.setBackground(new java.awt.Color(139,137,112));
         //create sign out button
-        signOutBtn = new JButton("Sign Out");
-        signOutBtn.setBackground(new java.awt.Color(30 ,144 ,255));
-        signOutBtn.setForeground(Color.black);
-        signOutBtn.setBorder(new RoundedBorder(10));
+        Icon logOutIcon = new ImageIcon("D:\\OOP\\code\\ProjectMessage_CLIENT\\image\\logOutBtnSmall.png");
+        signOutBtn = new JButton(logOutIcon);
+        signOutBtn.setBorderPainted(false);
+        signOutBtn.setBackground(new java.awt.Color(139,137,112));
+        signOutBtn.setForeground(Color.white);
+//        signOutBtn.setBorder(new RoundedBorder(10));
         signOutBtn.setFocusPainted(false);
         signOutBtn.addActionListener(new ActionListener() {
             @Override
@@ -68,10 +74,12 @@ public class MainFrame {
             }
         });
         //Add Friend Button
-        addFriendBtn = new JButton("Add Friend");
-        addFriendBtn.setBackground(new java.awt.Color(30 ,144 ,255));
+        Icon addFriendIcon = new ImageIcon("D:\\OOP\\code\\ProjectMessage_CLIENT\\image\\addFriendBtnSmall.png");
+        addFriendBtn = new JButton(addFriendIcon);
+        addFriendBtn.setBorderPainted(false);
+        addFriendBtn.setBackground(new java.awt.Color(139,137,112));
         addFriendBtn.setForeground(Color.black);
-        addFriendBtn.setBorder(new RoundedBorder(10));
+//        addFriendBtn.setBorder(new RoundedBorder(10));
         addFriendBtn.setFocusPainted(false);
         addFriendBtn.addActionListener(new ActionListener() {
             @Override
@@ -80,11 +88,13 @@ public class MainFrame {
                 AppMessenger.displayAddFriendFrame();
             }
         });
-
-        createGroupBtn = new JButton("Create Group");
-        createGroupBtn.setBackground(new java.awt.Color(30 ,144 ,255));
+        //create group btn
+        Icon createGroupIcon = new ImageIcon("D:\\OOP\\code\\ProjectMessage_CLIENT\\image\\createGroupBtnSmall.png");
+        createGroupBtn = new JButton(createGroupIcon );
+        createGroupBtn.setBorderPainted(false);
+        createGroupBtn.setBackground(new java.awt.Color(139,137,112));
         createGroupBtn.setForeground(Color.black);
-        createGroupBtn.setBorder(new RoundedBorder(10));
+//        createGroupBtn.setBorder(new RoundedBorder(10));
         createGroupBtn.setFocusPainted(false);
         createGroupBtn.addActionListener(new ActionListener() {
             @Override
@@ -93,10 +103,13 @@ public class MainFrame {
                 chatListFrame.setVisible(false);
             }
         });
-        groupBtn = new JButton("Group");
-        groupBtn.setBackground(new java.awt.Color(30 ,144 ,255));
+        //create Group Button
+        Icon groupIcon = new ImageIcon("D:\\OOP\\code\\ProjectMessage_CLIENT\\image\\groupBtnSmall.png");
+        groupBtn = new JButton(groupIcon);
+        groupBtn.setBorderPainted(false);
+        groupBtn.setBackground(new java.awt.Color(139,137,112));
         groupBtn.setForeground(Color.black);
-        groupBtn.setBorder(new RoundedBorder(10));
+//        groupBtn.setBorder(new RoundedBorder(10));
         groupBtn.setFocusPainted(false);
         groupBtn.addActionListener(new ActionListener() {
             @Override
@@ -113,8 +126,8 @@ public class MainFrame {
             }
         });
         //create text field search chat name and Button
-        searchChatNameTF = new JTextField("", 30);
-        searchChatNameTF.setHorizontalAlignment(JTextField.LEFT);
+//        searchChatNameTF = new JTextField("", 30);
+//        searchChatNameTF.setHorizontalAlignment(JTextField.LEFT);
 
         // searchChatNamePanel add component
         othersFunctionPanel.add(addFriendBtn);
@@ -122,16 +135,19 @@ public class MainFrame {
         othersFunctionPanel.add(groupBtn);
         othersFunctionPanel.add(signOutBtn);
 
-        searchPanel.add(searchChatNameTF);
+//        searchPanel.add(searchChatNameTF);
         //add panel Load User to scroll panel
         loadSessionSP = new JScrollPane(searchPanel, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        loadSessionSP.setPreferredSize(new Dimension(380, 530));
+        loadSessionSP.setPreferredSize(new Dimension(400, 480));
         loadSessionSP.setBackground(Color.white);
 
         //frame add panel
         chatListFrame.add(othersFunctionPanel);
-        chatListFrame.add(searchPanel);
+//        chatListFrame.add(chatListPanel);
+//        chatListFrame.add(searchPanel);
+        chatListFrame.add(loadSessionSP);
         chatListFrame.setVisible(true);
+        friendListInMainFrameRequest();
     }
     class RoundedBorder implements Border {
         int radius;
@@ -148,6 +164,78 @@ public class MainFrame {
             g.drawRoundRect(x,y,width-1,height-1,radius,radius);
         }
     }
+    //
+    public void friendListInMainFrameRequest(){
+        try {
+            LoadFriendRequest loadFriendRequest = new LoadFriendRequest(AppMessenger.LOAD_FRIEND_IN_MAIN_FRAME,idUser);
+            String json = AppMessenger.mapper.writeValueAsString(loadFriendRequest);
+            AppMessenger.out.writeUTF(json);
+            AppMessenger.out.flush();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+    //
+    public void displayFriendList(List<LoadFriendRespond.LoadFriend> loadFriendList) {
+        int width = 400;
+        int height = 0;
+        for (LoadFriendRespond.LoadFriend loadFriend : loadFriendList) {
+            height += 55;
+            JPanel userPanel = new JPanel();
+            userPanel.setPreferredSize(new Dimension(400, 50));
+            userPanel.setBackground(new java.awt.Color(255 ,255 ,240));
+            System.out.println("Amount Friends " + loadFriendList.size());
+            int idFriend = loadFriend.getIdUser();
+            String TenTaiKhoanFriend = loadFriend.getTenTaiKhoan();
+            String HoTenFriend = loadFriend.getHoTen();
+            //set label and button
+            System.out.println("searchFriendListFrame");
+            System.out.println("TenTaiKhoanFriend" + TenTaiKhoanFriend);
+            labelTenTkFriend = new JLabel(TenTaiKhoanFriend);
+            labelTenTkFriend.setPreferredSize(new Dimension(200, 40));
+            labelTenTkFriend.setBackground(new java.awt.Color(0 ,191 ,255));
+//            labelTenTkFriend.setForeground(Color.black);
+//            labelTenTkFriend.setBorder(new RoundedBorder(10));
+            //create button
+            Icon btnChatIcon = new ImageIcon("D:\\OOP\\code\\ProjectMessage_CLIENT\\image\\chatBtn.png");
+            btnChat = new JButton(btnChatIcon);
+            btnChat.setFocusPainted(false);
+            btnChat.setBorderPainted(false);
+            btnChat.setBackground(new java.awt.Color(255 ,255 ,240));
+            btnChat.setBorder(new RoundedBorder(10));
+            btnChat.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    try {
+                        chatListFrame.hide();
+                        ChatRequest chatRequest = new ChatRequest(AppMessenger.CHAT_ACTION_MAIN, AppMessenger.idUser, idFriend, TenTaiKhoanFriend);
+                        String json = AppMessenger.mapper.writeValueAsString(chatRequest);
+                        AppMessenger.out.writeUTF(json);
+                        AppMessenger.out.flush();
+
+                    } catch (Exception e1) {
+                        e1.printStackTrace();
+                    }
+                }
+            });
+            //add to panelChat
+            //create panel
+
+            userPanel.add(labelTenTkFriend);
+            userPanel.add(btnChat);
+            searchPanel.add(userPanel);
+
+        }
+        searchPanel.setPreferredSize(new Dimension(width, height));
+        searchPanel.revalidate();
+        searchPanel.repaint();
+
+
+    }
+
+    public static void main(String[] args) {
+        MainFrame s = new MainFrame(4);
+    }
 
     public void hide() {
         chatListFrame.setVisible(false);
@@ -157,4 +245,6 @@ public class MainFrame {
 //        ChatListFrame chatListFrame = new ChatListFrame();
 //        Thread.sleep(5000);
 //    }
+
 }
+
