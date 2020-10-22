@@ -124,6 +124,8 @@ class HandleClientThread extends Thread {
     final static int CHAT_GROUP_ACTION = 19;
     final static int SEND_MESSAGE_GROUP_ACTION = 20;
     final static int RECEIVED_MESSAGE_GROUP_ACTION = 21;
+    final static int CHAT_ACTION_MAIN = 22;
+    final static int LOAD_FRIEND_IN_MAIN_FRAME = 23;
     final static int LOAD_FRIEND_LIST_ACTION_TO_CREATE_GROUP = 70;
     public HandleClientThread(Connection conn, Socket clientSocket) {
         this.conn = conn;
@@ -199,6 +201,7 @@ class HandleClientThread extends Thread {
     }
 
     public void handleLogin(LogInRequest logInRequest) throws Exception {
+
         String pass = logInRequest.getPass();
         String encryptPass = encryptThisString(pass);
         Statement stmt = conn.createStatement();
@@ -208,8 +211,31 @@ class HandleClientThread extends Thread {
         System.out.println("encryptPass" + encryptPass);
         System.out.println("Login by" + logInRequest.getAccount());
 
+
         if (rs.next()) {
-            LogInRespond logInRespond = new LogInRespond(LOGIN_ACTION, LOGIN_SUCCESS, rs.getInt(1));
+            int idUser = rs.getInt(1);
+            LogInRespond logInRespond = new LogInRespond();
+            logInRespond.setAction(LOGIN_ACTION);
+            logInRespond.setState(LOGIN_SUCCESS);
+            logInRespond.setIdUser(idUser);
+//            Statement stmtSearchNameFriend = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+//
+//            ResultSet rsSearchNameFriend = stmtSearchNameFriend.executeQuery("select Users.IdUser, Users.TenTaiKhoan, Users.HoTen ,FriendShip.IdSession,Session.TimeFinish\n"
+//                    + "from FriendShip, Users,Session\n"
+//                    + " where\n"
+//                    + "FriendShip.UserId = " + idUser + "\n"
+//                    + "and FriendShip.FriendId = Users.IdUser and FriendShip.IdSession = Session.Id order by Session.TimeFinish desc");
+//            List<LogInRespond.LoadFriend> loadFriendList = new ArrayList<>();
+//            while (rsSearchNameFriend.next()) {
+//                int idUseri = rsSearchNameFriend.getInt(1);
+//                String accountName = rsSearchNameFriend.getString(2);
+//                String hoTen = rsSearchNameFriend.getString(3);
+//                LogInRespond.LoadFriend loadFriend = new LogInRespond.LoadFriend(idUseri,accountName,hoTen);
+//                loadFriendList.add(loadFriend);
+//            }
+//            logInRespond.setLoadFriendsList(loadFriendList);
+
+
             String json = TcpServer.mapper.writeValueAsString(logInRespond);
             out.writeUTF(json);
             out.flush();
@@ -371,6 +397,29 @@ class HandleClientThread extends Thread {
         out.writeUTF(TcpServer.mapper.writeValueAsString(loadFriendGroupRespond));
         out.flush();
     }
+    public void handleLoadListFriendInMainFrame(LoadFriendRequest loadFriendRequest2)throws  Exception{
+        int idUser = loadFriendRequest2.getIdUser();
+        LoadFriendRespond loadFriendRespond = new LoadFriendRespond();
+        loadFriendRespond.setAction(LOAD_FRIEND_IN_MAIN_FRAME);
+        Statement stmtSearchNameFriend = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+        ResultSet rsSearchNameFriend = stmtSearchNameFriend.executeQuery("select Users.IdUser, Users.TenTaiKhoan, Users.HoTen ,FriendShip.IdSession,Session.TimeFinish\n"
+                + "from FriendShip, Users,Session\n"
+                + " where\n"
+                + "FriendShip.UserId = " + idUser + "\n"
+                + "and FriendShip.FriendId = Users.IdUser and FriendShip.IdSession = Session.Id order by Session.TimeFinish desc");
+        List<LoadFriendRespond.LoadFriend> loadFriendList = new ArrayList<>();
+        while (rsSearchNameFriend.next()) {
+            int idUseri = rsSearchNameFriend.getInt(1);
+            String accountName = rsSearchNameFriend.getString(2);
+            String hoTen = rsSearchNameFriend.getString(3);
+            LoadFriendRespond.LoadFriend loadFriend = new LoadFriendRespond.LoadFriend(idUseri,accountName,hoTen);
+            loadFriendList.add(loadFriend);
+        }
+        loadFriendRespond.setLoadFriendsList(loadFriendList);
+        String json = TcpServer.mapper.writeValueAsString(loadFriendRespond);
+        out.writeUTF(json);
+        out.flush();
+    }
 
     public void handleLoadGroupList(LoadGroupListRequest loadGroupListRequest){
         try {
@@ -471,6 +520,43 @@ class HandleClientThread extends Thread {
                     messageList.add(chatMessage);
                 }
                 ChatRespond chatRespond = new ChatRespond(CHAT_ACTION, CHAT_ACTION_SUCCESS, idUser, idFriend, tenTaiKhoanFriend, sessionId, messageList);
+                String json = TcpServer.mapper.writeValueAsString(chatRespond);
+                out.writeUTF(json);
+                out.flush();
+            }
+        }
+
+    }
+
+    public void handleChatInMain(ChatRequest chatRequestMainFrame) throws Exception{
+        int idUser = chatRequestMainFrame.getIdUser();
+        int idFriend = chatRequestMainFrame.getIdFriend();
+        String tenTaiKhoanFriend = chatRequestMainFrame.getTenTaiKhoanFriend();
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery("select *\n"
+                + "from FriendShip\n"
+                + "where UserId = " + idUser + " and FriendId = " + idFriend);
+        if (rs.next()) {
+            int sessionId = rs.getInt(4);
+            if (sessionId == 0) {
+                List<ChatMessage> messageList = new ArrayList<>();
+                ChatRespond chatRespond = new ChatRespond(CHAT_ACTION_MAIN, CHAT_ACTION_SUCCESS, idUser, idFriend, tenTaiKhoanFriend, sessionId, messageList);
+                String json = TcpServer.mapper.writeValueAsString(chatRespond);
+                out.writeUTF(json);
+                out.flush();
+            } else {
+                Statement loadMessageStmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+                ResultSet loadMessageRs = loadMessageStmt.executeQuery("select * from Message where IdSession = " + sessionId);
+                System.out.println("LoadMessage "+ loadMessageRs);
+                loadMessageRs.last();
+                loadMessageRs.beforeFirst();
+                List<ChatMessage> messageList = new ArrayList<>();
+                while (loadMessageRs.next()) {
+                    ChatMessage chatMessage = new ChatMessage(loadMessageRs.getInt(1), loadMessageRs.getString(5),
+                            loadMessageRs.getInt(4));
+                    messageList.add(chatMessage);
+                }
+                ChatRespond chatRespond = new ChatRespond(CHAT_ACTION_MAIN, CHAT_ACTION_SUCCESS, idUser, idFriend, tenTaiKhoanFriend, sessionId, messageList);
                 String json = TcpServer.mapper.writeValueAsString(chatRespond);
                 out.writeUTF(json);
                 out.flush();
@@ -650,6 +736,11 @@ class HandleClientThread extends Thread {
                             LoadFriendRequest loadFriendRequest1 = TcpServer.mapper.readValue(json, LoadFriendRequest.class);
                             handleLoadFriendListToCreateGroup(loadFriendRequest1);
                             break;
+                        case LOAD_FRIEND_IN_MAIN_FRAME:
+                            System.out.println("go to load friend in main frame");
+                            LoadFriendRequest loadFriendRequest2 = TcpServer.mapper.readValue(json, LoadFriendRequest.class);
+                            handleLoadListFriendInMainFrame(loadFriendRequest2);
+                            break;
                         case CREATE_GROUP_ACTION:
                             System.out.println("create group");
                             CreateGroupRequest createGroupRequest = TcpServer.mapper.readValue(json,CreateGroupRequest.class);
@@ -664,6 +755,11 @@ class HandleClientThread extends Thread {
                             System.out.println("go to chat ");
                             ChatRequest chatRequest = TcpServer.mapper.readValue(json, ChatRequest.class);
                             handleChat(chatRequest);
+                            break;
+                        case CHAT_ACTION_MAIN:
+                            System.out.println("go to chat in main frame");
+                            ChatRequest chatRequestMainFrame = TcpServer.mapper.readValue(json, ChatRequest.class);
+                            handleChatInMain(chatRequestMainFrame);
                             break;
                         case SEND_MESSAGE_ACTION:
                             System.out.println("go to recived Message Action");
@@ -680,6 +776,7 @@ class HandleClientThread extends Thread {
                             SendGroupMessageRequest sendGroupMessageRequest = TcpServer.mapper.readValue(json,SendGroupMessageRequest.class);
                             handleReceivedGroupMsg(sendGroupMessageRequest);
                             break;
+
                     }
                 }
 
