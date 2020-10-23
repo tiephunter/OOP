@@ -89,7 +89,6 @@ public class AddFriendFrame {
         btnSearchUser.setBorderPainted(false);
         btnSearchUser.setForeground(Color.black);
         btnSearchUser.setBackground(new java.awt.Color(205 ,201 ,165));
-        btnSearchUser.setBorder(new RoundedBorder(5));
         btnSearchUser.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

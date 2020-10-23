@@ -42,7 +42,7 @@ public class FriendListFrame {
         panelButton.setBackground(new java.awt.Color(205 ,201 ,165));
 //        panelButton.setForeground(new java.awt.Color(0 ,191 ,255));
         //create button back to home
-        Icon backIcon = new ImageIcon("D:\\OOP\\code\\ProjectMessage_CLIENT\\image\\backBtn.png");
+        Icon backIcon = new ImageIcon("D:\\OOP\\code\\ProjectMessage_CLIENT\\image\\backBtnSmall.png");
         backToHome = new JButton(backIcon);
         backToHome.setBorderPainted(false);
         backToHome.setFocusPainted(false);

@@ -21,6 +21,7 @@ public class CreateGroupFrame {
     JPanel btnPanel;
     JButton backToHome;
     JPanel friendListPanel;
+    JPanel createBtnPanel;
     JLabel labelTenTkFriend;
     JButton btnAddToGroup;
     JScrollPane friendGroupSp;
@@ -35,32 +36,38 @@ public class CreateGroupFrame {
         System.out.println("");
         //create Frame
         CreateGroupFrame = new JFrame("Create Group ");
-        CreateGroupFrame.setSize(400, 600);
+        CreateGroupFrame.setSize(400, 630);
         CreateGroupFrame.setLocationRelativeTo(CreateGroupFrame);
         CreateGroupFrame.setResizable(true);
         CreateGroupFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         //set Layout cho FrameChat
-        CreateGroupFrame.setLayout(new FlowLayout(FlowLayout.LEFT));
+        CreateGroupFrame.setLayout(new FlowLayout(FlowLayout.LEFT,0,0));
         //create panel
         btnPanel = new JPanel();
         btnPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-        btnPanel.setPreferredSize(new Dimension(400, 50));
+        btnPanel.setPreferredSize(new Dimension(400, 70));
         btnPanel.setBorder(new EmptyBorder(0,0,0,20));
-        btnPanel.setBackground(Color.white);
+        btnPanel.setBackground(new java.awt.Color(139,137,112));
         //
         friendListPanel = new JPanel();
 //        friendListPanel.setPreferredSize(new Dimension(380,500));
         friendListPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-        friendListPanel.setBackground(Color.white);
+        friendListPanel.setBackground(new java.awt.Color(205 ,201 ,165));
         //
         friendGroupSp = new JScrollPane(friendListPanel, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        friendGroupSp.setPreferredSize(new Dimension(380, 500));
-        friendGroupSp.setBackground(Color.white);
+        friendGroupSp.setPreferredSize(new Dimension(380, 450));
+        //create panel
+        createBtnPanel = new JPanel();
+        createBtnPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        createBtnPanel.setPreferredSize(new Dimension(400, 70));
+        createBtnPanel.setBorder(new EmptyBorder(0,0,0,20));
+        createBtnPanel.setBackground(new java.awt.Color(205 ,201 ,165));
         //create button back to home
-        backToHome = new JButton("< Back");
+        Icon backBtnIcon = new ImageIcon("D:\\OOP\\code\\ProjectMessage_CLIENT\\image\\backBtn.png");
+        backToHome = new JButton(backBtnIcon);
+        backToHome.setBorderPainted(false);
         backToHome.setFocusPainted(false);
-        backToHome.setBackground(Color.white);
-        backToHome.setForeground(new java.awt.Color(0 ,191 ,255));
+        backToHome.setBackground(new java.awt.Color(139,137,112));
         backToHome.setBorder(new RoundedBorder(10));
         backToHome.addActionListener(new ActionListener() {
             @Override
@@ -74,7 +81,7 @@ public class CreateGroupFrame {
         btnPanel.add(backToHome);
 //        friendListPanel.add(btnCreateGroup);
         CreateGroupFrame.add(btnPanel);
-        CreateGroupFrame.add(friendListPanel);
+        CreateGroupFrame.add(friendGroupSp);
         CreateGroupFrame.setVisible(true);
 
     }
@@ -101,6 +108,7 @@ public class CreateGroupFrame {
         //fetch data
 //            JButton btnCreateGroup;
 //            friendListPanel.removeAll();
+
         int idUser = loadFriendGroupRespond.getIdUser();
         String UserName = loadFriendGroupRespond.getAccountName();
         ArrayList<Member> memberList = new ArrayList<>();
@@ -108,10 +116,11 @@ public class CreateGroupFrame {
         memberList.add(member);
         List<LoadFriendGroupRespond.LoadFriend> loadFriendList = loadFriendGroupRespond.getLoadFriendList();
         int width = 380;
-        int height = 250;
+        int height = 0;
+
         for (LoadFriendGroupRespond.LoadFriend loadFriend : loadFriendList) {
             //
-            height += 50;
+            height += 55;
             System.out.println("Amount Friends " + loadFriendList.size());
             int idFriend = loadFriend.getIdFriend();
             String TenTaiKhoanFriend = loadFriend.getAccountName();
@@ -120,29 +129,30 @@ public class CreateGroupFrame {
             JPanel friendPanel = new JPanel();
             friendPanel.setPreferredSize(new Dimension(380, 50));
             friendPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-            friendPanel.setBackground(Color.white);
+            friendPanel.setBackground(new java.awt.Color(205 ,201 ,165));
             //set label and button
             System.out.println("Create Group");
             System.out.println("TenTaiKhoanFriend" + TenTaiKhoanFriend);
             labelTenTkFriend = new JLabel(TenTaiKhoanFriend);
             labelTenTkFriend.setBackground(Color.white);
-            labelTenTkFriend.setForeground(new java.awt.Color(0 ,191 ,255));
             labelTenTkFriend.setBorder(new RoundedBorder(10));
             labelTenTkFriend.setPreferredSize(new Dimension(200, 50));
             //action create group button
-            btnAddToGroup = new JButton("Add to Gr");
+            Icon addGroupBtnIcon = new ImageIcon("D:\\OOP\\code\\ProjectMessage_CLIENT\\image\\addToGroup.png");
+            JButton btnAddToGroup = new JButton(addGroupBtnIcon);
             btnAddToGroup.setSize(20, 20);
-            btnAddToGroup.setBackground(new java.awt.Color(0 ,191 ,255));
-            btnAddToGroup.setForeground(Color.black);
-            btnAddToGroup.setBorder(new RoundedBorder(10));
-            btnAddToGroup.setFocusPainted(false);
+            btnAddToGroup.setBackground(new java.awt.Color(205 ,201 ,165));
+            btnAddToGroup.setBorderPainted(false);
+//            btnAddToGroup.setFocusPainted(false);
             btnAddToGroup.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     try {
+//                        btnAddToGroup.setEnabled(false);
                         Member member = new Member(idFriend, TenTaiKhoanFriend);
                         memberList.add(member);
                         btnAddToGroup.setEnabled(false);
+//                        friendPanel.remove(btnAddToGroup);
 
                     } catch (Exception e1) {
                         e1.printStackTrace();
@@ -154,12 +164,15 @@ public class CreateGroupFrame {
             friendPanel.add(btnAddToGroup);
             friendListPanel.add(friendPanel);
         }
+
         friendListPanel.setPreferredSize(new Dimension(width, height));
         friendListPanel.revalidate();
         friendListPanel.repaint();
-
-        btnCreateGroup = new JButton("Create Group");
-        btnCreateGroup.setBackground( new java.awt.Color (185 ,211 ,238));
+        //create group button
+        Icon createGroupBtn = new ImageIcon("D:\\OOP\\code\\ProjectMessage_CLIENT\\image\\createGroupBtnSmall.png");
+        btnCreateGroup = new JButton(createGroupBtn);
+        btnCreateGroup.setBackground( new java.awt.Color(205 ,201 ,165));
+        btnCreateGroup.setBorderPainted(false);
         btnCreateGroup.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -176,7 +189,11 @@ public class CreateGroupFrame {
             }
         });
 
-        friendListPanel.add(btnCreateGroup);
+        createBtnPanel.add(btnCreateGroup);
+        CreateGroupFrame.add(createBtnPanel);
+//        friendListPanel.add(btnCreateGroup);
+
+//        friendListPanel.add(btnCreateGroup);
 //            friendListPanel.updateUI();
 //            CreateGroupFrame.add(friendListPanel);
         CreateGroupFrame.setVisible(true);
@@ -188,8 +205,8 @@ public class CreateGroupFrame {
         loadFriendGroupRespond.setIdUser(1);
         loadFriendGroupRespond.setAccountName("sf");
         loadFriendGroupRespond.setLoadFriendList(new ArrayList<>());
-        for (int i=0; i<10; i++){
-            LoadFriendGroupRespond.LoadFriend loadFriend = new LoadFriendGroupRespond.LoadFriend(1,"sfdsgfdsgfdsgsfd","dsf");
+        for (int i=0; i<142; i++){
+            LoadFriendGroupRespond.LoadFriend loadFriend = new LoadFriendGroupRespond.LoadFriend(1,""+i,"dsf");
             loadFriendGroupRespond.getLoadFriendList().add(loadFriend);
         }
 

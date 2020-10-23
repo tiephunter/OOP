@@ -1,4 +1,4 @@
-package server.payload;
+package clientmess.payload;
 
 public class SendMessgeGroupRespond extends BasePayload {
     private int idMsg;

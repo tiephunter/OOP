@@ -147,7 +147,7 @@ public class ConversationFrameTest {
         ChatRespond chatRespond = new ChatRespond();
         chatRespond.setMessageList(new ArrayList<>());
         for (int i = 0; i < 100; i++) {
-            ChatMessage chatMessage = new ChatMessage(i, "balbalba " + i, i);
+            ChatMessage chatMessage = new ChatMessage(i, "balbalba " + i, i,"SD");
             chatRespond.getMessageList().add(chatMessage);
         }
         ConversationFrameTest conversationFrame = new ConversationFrameTest(chatRespond);

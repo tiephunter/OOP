@@ -32,6 +32,12 @@ public class GroupFrame {
         groupListFrame.setLocationRelativeTo(groupListFrame);
         groupListFrame.setResizable(true);
         groupListFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        //create BtnPanel
+        btnPanel = new JPanel();
+        btnPanel.setPreferredSize(new Dimension(400, 70));
+        btnPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+        btnPanel.setBackground(new java.awt.Color(205 ,201 ,165));
         //create groupList panel
         groupListPanel = new JPanel();
         groupListPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
@@ -40,14 +46,9 @@ public class GroupFrame {
 
         //create Scroll pane
         groupSp = new JScrollPane(groupListPanel, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        groupSp.setPreferredSize(new Dimension(380, 550));
-        //create BtnPanel
-        btnPanel = new JPanel();
-        btnPanel.setPreferredSize(new Dimension(400, 50));
-        btnPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-        btnPanel.setBackground(new java.awt.Color(205 ,201 ,165));
+        groupSp.setPreferredSize(new Dimension(380, 450));
         //create button back to home
-        Icon backBtnIcon = new ImageIcon("D:\\OOP\\code\\ProjectMessage_CLIENT\\image\\backBtn.png");
+        Icon backBtnIcon = new ImageIcon("D:\\OOP\\code\\ProjectMessage_CLIENT\\image\\backBtnSmall.png");
         backToHome = new JButton(backBtnIcon);
         backToHome.setFocusPainted(false);
         backToHome.setBorderPainted(false);
@@ -62,11 +63,11 @@ public class GroupFrame {
             }
         });
         //create session name button
-//        int width = 400;
-//        int height = 0;
+        int width = 400;
+        int height = 0;
         for (LoadGroupListRespond.Group group : groupList) {
             //
-//            height += 55;
+            height += 55;
             JPanel groupPanel = new JPanel();
             groupPanel.setPreferredSize(new Dimension(400, 50));
             groupPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
@@ -107,7 +108,7 @@ public class GroupFrame {
             groupListPanel.add(groupPanel);
 
         }
-//        groupListPanel.setPreferredSize(new Dimension(width, height));
+        groupListPanel.setPreferredSize(new Dimension(width, height));
         groupListPanel.revalidate();
         groupListPanel.repaint();
 
@@ -118,7 +119,7 @@ public class GroupFrame {
         //add component to panel and frame
         btnPanel.add(backToHome);
         groupListFrame.add(btnPanel);
-        groupListFrame.add(groupListPanel);
+        groupListFrame.add(groupSp);
         groupListFrame.setVisible(true);
         System.out.println("End Group Frame");
     }

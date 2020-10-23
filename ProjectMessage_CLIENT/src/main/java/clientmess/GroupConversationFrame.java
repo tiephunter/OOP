@@ -16,6 +16,7 @@ import java.util.List;
 
 public class GroupConversationFrame {
     JFrame frameConversation;
+    JPanel panelWhole;
     JPanel panelBackBtn;
     JScrollPane spChat;
     JPanel panelConversation;
@@ -23,6 +24,7 @@ public class GroupConversationFrame {
     JTextField tfInputMessage;
     JLabel lbReceivedMessage;
     JButton backToHome;
+    JButton btnSend;
     JFileChooser fileDialog;
     Mess message;
      int height = 0;
@@ -48,16 +50,21 @@ public class GroupConversationFrame {
             frameConversation.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             frameConversation.setBackground(Color.gray);
             frameConversation.setForeground(Color.gray);
-
+            //
+            panelWhole = new JPanel();
+            panelWhole.setLayout(new FlowLayout(FlowLayout.LEFT));
+            panelWhole.setPreferredSize(new Dimension(450, 650));
+            panelWhole.setBackground(new java.awt.Color(205 ,201 ,165));
+            //
             //panel Back button
             panelBackBtn = new JPanel();
             panelBackBtn.setLayout(new FlowLayout(FlowLayout.LEFT));
             panelBackBtn.setPreferredSize(new Dimension(400, 50));
-            panelBackBtn.setBackground(Color.white);
+            panelBackBtn.setBackground(new java.awt.Color(205 ,201 ,165));
             //create panelConversation
             panelConversation = new JPanel();
             panelConversation.setLayout(new FlowLayout());
-            panelConversation.setBackground(Color.white);
+            panelConversation.setBackground(new java.awt.Color(205 ,201 ,165));
             //create JscrollpaneChat
             spChat = new JScrollPane(panelConversation, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
             spChat.setPreferredSize(new Dimension(380, 450));
@@ -65,13 +72,12 @@ public class GroupConversationFrame {
             panelTextChat = new JPanel();
             panelTextChat.setLayout(new FlowLayout());
             panelTextChat.setPreferredSize(new Dimension(380,50));
-            panelTextChat.setBackground(Color.white);
+            panelTextChat.setBackground(new java.awt.Color(205 ,201 ,165));
             //create button back to home
-            backToHome = new JButton("< Back");
+            Icon backIcon = new ImageIcon("D:\\OOP\\code\\ProjectMessage_CLIENT\\image\\backBtnSmall.png");
+            backToHome = new JButton(backIcon);
             backToHome.setFocusPainted(false);
-            backToHome.setBackground(Color.white);
-            backToHome.setForeground(new java.awt.Color(0 ,191 ,255));
-            backToHome.setBorder(new RoundedBorder(10));
+            backToHome.setBackground(new java.awt.Color(205 ,201 ,165));
             backToHome.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -94,34 +100,22 @@ public class GroupConversationFrame {
                 int idMsg = chatMessage.getIdMsg();
                 String textMsg = chatMessage.getTextMsg();
                 int idSender = chatMessage.getIdSender();
+                String userName = chatMessage.getUserName();
 
                 if (idUser == idSender) {
-                    //create panel
-//                    JPanel panelText = new JPanel();
-//                    panelText.setLayout(new FlowLayout(FlowLayout.RIGHT));
-//                    panelText.setPreferredSize(new Dimension(380, 50));
-//                    panelText.setBorder(new EmptyBorder(0, 0, 0, 15));
-//                    panelText.setBackground(Color.white);
-//                    panelText.setForeground(Color.blue);
-//                    //create lable
-//                    JLabel lbMsg = new JLabel(textMsg);
-//                    lbMsg.setPreferredSize(new Dimension(200, 50));
-//                    lbMsg.setBackground(Color.blue);
-//                    panelText.add(lbMsg);
-//                    panelConversation.add(panelText);
                     //create panel
                     JPanel panelText = new JPanel();
                     panelText.setLayout(new FlowLayout(FlowLayout.RIGHT));
                     panelText.setPreferredSize(new Dimension(380, 50));
                     panelText.setBorder(new EmptyBorder(0, 0, 0, 15));
-                    panelText.setBackground(Color.white);
+                    panelText.setBackground(new java.awt.Color(255, 255 ,240));
                     //
                     JButton lbMsg = new JButton(textMsg);
                     lbMsg.setPreferredSize(new Dimension(200, 30));
                     lbMsg.setFocusPainted(false);
 //                    lbMsg.setEnabled(false);
-                    lbMsg.setBackground(new java.awt.Color(30 ,144 ,255));
-                    lbMsg.setForeground(Color.black);
+                    lbMsg.setBackground(new java.awt.Color(139 ,137 ,112));
+//                    lbMsg.setForeground(Color.black);
                     lbMsg.setBorder(new RoundedBorder(20));
 
 //                  add to panel;
@@ -143,19 +137,22 @@ public class GroupConversationFrame {
                     JPanel panelText = new JPanel();
                     panelText.setLayout(new FlowLayout(FlowLayout.LEFT));
                     panelText.setPreferredSize(new Dimension(380, 50));
-                    panelText.setBackground(Color.white);
+                    panelText.setBackground(new java.awt.Color(255, 255 ,240));
                     panelText.setBorder(new EmptyBorder(0, 0, 0, 0));
 //                    panelText.setForeground(Color.blue);
                     //
+                    JLabel userNameLabel = new JLabel(userName+":");
+                    userNameLabel.setPreferredSize(new Dimension(380,10));
                     JButton msgBtn = new JButton(textMsg);
                     msgBtn.setPreferredSize(new Dimension(200, 30));
                     msgBtn.setFocusPainted(false);
 //                    msgBtn.setEnabled(false);
-                    msgBtn.setBackground(new java.awt.Color(30 ,144 ,255));
+                    msgBtn.setBackground(new java.awt.Color(139 ,137, 112));
                     msgBtn.setForeground(Color.black);
                     msgBtn.setBorder(new RoundedBorder(10));
 
 //                    msgBtn.setHorizontalAlignment(JLabel.LEFT);
+                    panelText.add(userNameLabel);
                     panelText.add(msgBtn);
                     panelConversation.add(panelText);
                 }
@@ -167,12 +164,17 @@ public class GroupConversationFrame {
             panelConversation.scrollRectToVisible(new Rectangle(0, height, viewBounds.width, viewBounds.height));
 
             //create tfMessage and BtnSend
-
-            tfInputMessage = new JTextField("", 25);
-            JButton btnSend = new JButton("Send");
-            btnSend.setSize(20, 20);
+            JTextArea tfInputMessage = new JTextArea();
+            JScrollPane areaScrollPane = new JScrollPane(tfInputMessage);
+            areaScrollPane.setVerticalScrollBarPolicy(
+                    JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+            areaScrollPane.setPreferredSize(new Dimension(250, 50));
+            //
+            Icon sendIcon = new ImageIcon("D:\\OOP\\code\\ProjectMessage_CLIENT\\image\\sendBtn.png");
+            btnSend  = new JButton(sendIcon);
             btnSend.setFocusPainted(false);
-            btnSend.setBackground(Color.WHITE);
+            btnSend.setBorderPainted(false);
+            btnSend.setBackground(new java.awt.Color(205 ,201 ,165));
             btnSend.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -196,7 +198,7 @@ public class GroupConversationFrame {
                             msgBtn.setPreferredSize(new Dimension(200, 30));
                             msgBtn.setFocusPainted(false);
 //                    msgBtn.setEnabled(false);
-                            msgBtn.setBackground(new java.awt.Color(30 ,144 ,255));
+                            msgBtn.setBackground(new java.awt.Color(139 ,137 ,112));
                             msgBtn.setForeground(Color.black);
                             msgBtn.setBorder(new RoundedBorder(20));
 
@@ -224,14 +226,15 @@ public class GroupConversationFrame {
 
 
             //panel add to component
-            panelTextChat.add(tfInputMessage);
+            panelTextChat.add(areaScrollPane);
             panelTextChat.add(btnSend);
 
             //panleCon add component
 
-            frameConversation.add(panelBackBtn);
-            frameConversation.add(spChat);
-            frameConversation.add(panelTextChat);
+            panelWhole.add(panelBackBtn);
+            panelWhole.add(spChat);
+            panelWhole.add(panelTextChat);
+            frameConversation.add(panelWhole);
             frameConversation.setLayout(new FlowLayout());
             frameConversation.setVisible(true);
         } catch (Exception e) {
@@ -251,20 +254,24 @@ public class GroupConversationFrame {
             panelText.setLayout(new FlowLayout(FlowLayout.LEFT));
             panelText.setPreferredSize(new Dimension(380, 50));
             panelText.setBorder(new EmptyBorder(0, 0, 0, 15));
-            panelText.setBackground(Color.white);
+            panelText.setBackground(new java.awt.Color(255, 255 ,240));
             int idMsg = sendMessgeGroupRespond.getIdMsg();
             int idSession = sendMessgeGroupRespond.getIdSession();
             int idUser = sendMessgeGroupRespond.getIdUser();
             String messageTxt = sendMessgeGroupRespond.getTfInputMsg();
+            String userName = sendMessgeGroupRespond.getUserName();
             //creatte button to hold text
+            JLabel userNameLb = new JLabel(userName+":");
+            userNameLb.setPreferredSize(new Dimension(380,10));
             JButton msgBtn = new JButton(messageTxt);
             msgBtn.setPreferredSize(new Dimension(200, 30));
             msgBtn.setFocusPainted(false);
     //                    msgBtn.setEnabled(false);
-            msgBtn.setBackground(new java.awt.Color(30 ,144 ,255));
+            msgBtn.setBackground(new java.awt.Color(139, 137 ,112));
             msgBtn.setForeground(Color.black);
             msgBtn.setBorder(new RoundedBorder(20));
             //
+            panelText.add(userNameLb);
             panelText.add(msgBtn);
             panelConversation.add(panelText);
             panelConversation.setPreferredSize(new Dimension(width, height += 55));

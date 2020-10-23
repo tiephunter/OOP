@@ -8,7 +8,6 @@ import clientmess.payload.SendMessageRespond;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
-import javax.swing.filechooser.FileSystemView;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -40,7 +39,7 @@ public class ConversationFrame {
             int idFriend = chatRespond.getIdFriend();
             String tenTaiKhoanFriend = chatRespond.getTenTaiKhoanFriend();
             frameConversation = new JFrame(tenTaiKhoanFriend);
-            frameConversation.setSize(450, 650);
+            frameConversation.setSize(430, 650);
             frameConversation.setLocationRelativeTo(frameConversation);
             frameConversation.setResizable(true);
             frameConversation.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -49,8 +48,7 @@ public class ConversationFrame {
             //
             panelWhole = new JPanel();
             panelWhole.setLayout(new FlowLayout(FlowLayout.LEFT));
-            panelWhole.setPreferredSize(new Dimension(450, 650));
-            panelWhole.setBorder(new EmptyBorder(0,30,0,0));
+            panelWhole.setPreferredSize(new Dimension(430, 650));
             panelWhole.setBackground(new java.awt.Color(205 ,201 ,165));
             //
             panelBackBtn = new JPanel();
@@ -72,13 +70,13 @@ public class ConversationFrame {
 
 //            JLabel lbMsg;
             //create button back to home
-            Icon backIcon = new ImageIcon("D:\\OOP\\code\\ProjectMessage_CLIENT\\image\\backBtn.png");
+            Icon backIcon = new ImageIcon("D:\\OOP\\code\\ProjectMessage_CLIENT\\image\\backBtnSmall.png");
             backToHome = new JButton(backIcon);
             backToHome.setFocusPainted(false);
             backToHome.setBorderPainted(false);
             backToHome.setBackground(new java.awt.Color(205 ,201 ,165));
 //            backToHome.setForeground(new java.awt.Color(0, 191 ,255));
-            backToHome.setBorder(new RoundedBorder(10));
+//            backToHome.setBorder(new RoundedBorder(10));
             backToHome.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -101,7 +99,8 @@ public class ConversationFrame {
                 int idMsg = chatMessage.getIdMsg();
                 String textMsg = chatMessage.getTextMsg();
                 int idSender = chatMessage.getIdSender();
-
+                String userName = chatMessage.getUserName();
+//                JLabel userNamelable;
                 if (idUser == idSender) {
                     //create panel
                     JPanel panelText = new JPanel();
@@ -110,6 +109,7 @@ public class ConversationFrame {
                     panelText.setBorder(new EmptyBorder(0, 0, 0, 15));
                     panelText.setBackground(new java.awt.Color(255, 255 ,240));
                     //
+//                    userNamelable = new JLabel(userName);
                     JButton lbMsg = new JButton(textMsg);
                     lbMsg.setPreferredSize(new Dimension(200, 30));
                     lbMsg.setFocusPainted(false);
@@ -120,6 +120,7 @@ public class ConversationFrame {
 
 //                  add to panel;
                     panelText.add(lbMsg);
+//                    panelText.add(userNamelable);
                     panelConversation.add(panelText);
                 } else {
                     //
@@ -130,6 +131,8 @@ public class ConversationFrame {
                     panelText.setBorder(new EmptyBorder(0, 0, 0, 0));
 //                    panelText.setForeground(Color.blue);
                     //
+                    JLabel userNamelb = new JLabel(userName+":");
+                    userNamelb.setPreferredSize(new Dimension(380,10));
                     JButton msgBtn = new JButton(textMsg);
                     msgBtn.setPreferredSize(new Dimension(200, 30));
                     msgBtn.setFocusPainted(false);
@@ -144,6 +147,7 @@ public class ConversationFrame {
 //                    msgBtn.setBackground(Color.yellow);
 
 //                    msgBtn.setHorizontalAlignment(JLabel.LEFT);
+                    panelText.add(userNamelb);
                     panelText.add(msgBtn);
                     panelConversation.add(panelText);
                 }
@@ -186,6 +190,7 @@ public class ConversationFrame {
                             AppMessenger.out.writeUTF(json);
                             AppMessenger.out.flush();
                             //creatte button to hold text
+//                            JLabel userNamelable = new JLabel(userName);
                             JButton msgBtn = new JButton(tfInputMessage.getText());
                             msgBtn.setPreferredSize(new Dimension(200, 30));
                             msgBtn.setFocusPainted(false);
@@ -248,7 +253,10 @@ public class ConversationFrame {
             int idSession = sendMessageRespond.getIdSession();
             int idUser = sendMessageRespond.getIdUser();
             String messageTxt = sendMessageRespond.getTfInputMsg();
+            String userName = sendMessageRespond.getUserName();
             //creatte button to hold text
+            JLabel userNameLb = new JLabel(userName+":");
+            userNameLb.setPreferredSize(new Dimension(380,10));
             JButton msgBtn = new JButton(messageTxt);
             msgBtn.setPreferredSize(new Dimension(200, 30));
             msgBtn.setFocusPainted(false);
@@ -258,6 +266,7 @@ public class ConversationFrame {
             msgBtn.setBorder(new RoundedBorder(20));
 
 //                    msgBtn.setHorizontalAlignment(JLabel.LEFT);
+            panelText.add(userNameLb);
             panelText.add(msgBtn);
             panelConversation.add(panelText);
             panelConversation.setPreferredSize(new Dimension(width, height += 55));
@@ -282,26 +291,26 @@ public class ConversationFrame {
         chatRespond.setMessageList(new ArrayList<>());
         for (int i = 0; i < 10; i++) {
             ChatMessage chatMessage = new ChatMessage(i, "dsadsa" +
-                    "dfgdfgfdg ", i);
+                    "dfgdfgfdg ", i,"sd");
             chatRespond.getMessageList().add(chatMessage);
         }
         ConversationFrame conversationFrame = new ConversationFrame(chatRespond);
 
         conversationFrame.displayOnlMessage(
                 new SendMessageRespond(1, AppMessenger.RECEIVED_MESSENGER_NOW, 1, 1, 1, "Ahaaaha" +
-                        "fdga"));
+                        "fdga","Sd"));
 
 
         conversationFrame.displayOnlMessage(
-                new SendMessageRespond(1, AppMessenger.RECEIVED_MESSENGER_NOW, 1, 1, 1, "Ahaaahaa"));
+                new SendMessageRespond(1, AppMessenger.RECEIVED_MESSENGER_NOW, 1, 1, 1, "Ahaaahaa","sd"));
 
 
         conversationFrame.displayOnlMessage(
-                new SendMessageRespond(1, AppMessenger.RECEIVED_MESSENGER_NOW, 1, 1, 1, "Ahaaahaa"));
+                new SendMessageRespond(1, AppMessenger.RECEIVED_MESSENGER_NOW, 1, 1, 1, "Ahaaahaa","sfs"));
 
 
         conversationFrame.displayOnlMessage(
-                new SendMessageRespond(1, AppMessenger.RECEIVED_MESSENGER_NOW, 1, 1, 1, "Ahaaahaa"));
+                new SendMessageRespond(1, AppMessenger.RECEIVED_MESSENGER_NOW, 1, 1, 1, "Ahaaahaa","asd"));
     }
     class RoundedBorder implements Border {
         int radius;

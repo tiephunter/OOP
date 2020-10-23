@@ -48,6 +48,7 @@ public class AppMessenger {
     final static int RECEIVED_MESSAGE_GROUP_ACTION = 21;
     final static int CHAT_ACTION_MAIN = 22;
     final static int LOAD_FRIEND_IN_MAIN_FRAME = 23;
+    final static int SEARCH_FRIEND_LIST_ACTION = 24;
     final static int LOAD_FRIEND_LIST_ACTION_TO_CREATE_GROUP = 70;
 
 
@@ -126,6 +127,9 @@ public class AppMessenger {
 
     public static void handleLoadUserListAction(LoadUserRespond loadUserRespond) throws Exception {
         addFriendFrame.displayUserList(loadUserRespond.getLoadUserList());
+    }
+    public static void handleSearchFriendListAction(LoadFriendRespond searchFriendRespond){
+        mainFrame.displaySearchFriendList(searchFriendRespond.getLoadFriendsList());
     }
 
     public static void handleAddFriendAction(AddFriendRespond addFriendRespond) throws Exception {
@@ -292,6 +296,11 @@ class ThreadHandleInput extends Thread {
                             System.out.println("Handle Load User List Action");
                             LoadUserRespond loadUserRespond = AppMessenger.mapper.readValue(json, LoadUserRespond.class);
                             AppMessenger.handleLoadUserListAction(loadUserRespond);
+                            break;
+                        case AppMessenger.SEARCH_FRIEND_LIST_ACTION:
+                            System.out.println("handle search Friend List");
+                            LoadFriendRespond searchFriendRespond = AppMessenger.mapper.readValue(json,LoadFriendRespond.class);
+                            AppMessenger.handleSearchFriendListAction(searchFriendRespond);
                             break;
                         case AppMessenger.ADD_FRIEND_ACTION:
                             System.out.println("Handle Add friend Action");

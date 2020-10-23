@@ -6,18 +6,20 @@ public class SendMessageRespond extends BasePayload {
     private int idSession;
     private int idUser;
     private String tfInputMsg;
+    private String userName;
 
     public SendMessageRespond() {
 
     }
 
-    public SendMessageRespond(int action, int userState, int idMsg, int idSession, int idUser, String tfInputMsg) {
+    public SendMessageRespond(int action, int userState, int idMsg, int idSession, int idUser, String tfInputMsg, String userName) {
         super(action);
         this.userState = userState;
         this.idMsg = idMsg;
         this.idSession = idSession;
         this.idUser = idUser;
         this.tfInputMsg = tfInputMsg;
+        this.userName = userName;
     }
 
     public int getUserState() {
@@ -58,5 +60,13 @@ public class SendMessageRespond extends BasePayload {
 
     public void setTfInputMsg(String tfInputMsg) {
         this.tfInputMsg = tfInputMsg;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 }
