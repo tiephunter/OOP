@@ -1,20 +1,22 @@
-package clientmess.payload;
+package server.payload;
 
 public class SendMessgeGroupRespond extends BasePayload {
     private int idMsg;
     private int idSession;
     private int idUser;
     private String tfInputMsg;
+    private String userName;
 
     public SendMessgeGroupRespond() {
     }
 
-    public SendMessgeGroupRespond(int action, int idMsg, int idSession, int idUser, String tfInputMsg) {
+    public SendMessgeGroupRespond(int action, int idMsg, int idSession, int idUser, String tfInputMsg, String userName) {
         super(action);
         this.idMsg = idMsg;
         this.idSession = idSession;
         this.idUser = idUser;
         this.tfInputMsg = tfInputMsg;
+        this.userName = userName;
     }
 
     public int getIdMsg() {
@@ -47,5 +49,13 @@ public class SendMessgeGroupRespond extends BasePayload {
 
     public void setTfInputMsg(String tfInputMsg) {
         this.tfInputMsg = tfInputMsg;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 }
