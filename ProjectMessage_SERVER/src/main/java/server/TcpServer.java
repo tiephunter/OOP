@@ -127,6 +127,8 @@ class HandleClientThread extends Thread {
     final static int CHAT_ACTION_MAIN = 22;
     final static int LOAD_FRIEND_IN_MAIN_FRAME = 23;
     final static int SEARCH_FRIEND_LIST_ACTION = 24;
+    final static int SEARCH_FRIEND_LIST_ACTION_MAIN_FRAME = 25;
+    final static int SEARCH_FRIEND_LIST_ACTION_CREATE_GROUP = 26;
     final static int LOAD_FRIEND_LIST_ACTION_TO_CREATE_GROUP = 70;
     public HandleClientThread(Connection conn, Socket clientSocket) {
         this.conn = conn;
@@ -286,26 +288,39 @@ class HandleClientThread extends Thread {
 
     public void handleSearchFriendList(SearchFriendListRequest searchFriendListRequest){
         try {
+            int position = searchFriendListRequest.getPosition();
+            System.out.println("position"+position);
             int idUser = searchFriendListRequest.getIdUser();
             String tfSearch = searchFriendListRequest.getMessage();
             Statement stmtSearchFriend = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-            ResultSet rsSearch = stmtSearchFriend.executeQuery("select Users.IdUser, Users.TenTaiKhoan, Users.HoTen \n" +
+            ResultSet rsSearchFriend = stmtSearchFriend.executeQuery("select Users.IdUser, Users.TenTaiKhoan, Users.HoTen \n" +
                     "                from FriendShip, Users\n" +
                     "                 where\n" +
                     "                FriendShip.UserId = " + idUser + " and FriendShip.FriendId = Users.IdUser and Users.TenTaiKhoan like N'"+tfSearch+"%'");
-            LoadFriendRespond loadFriendRespond = new LoadFriendRespond();
-            loadFriendRespond.setAction(SEARCH_FRIEND_LIST_ACTION);
-            List<LoadFriendRespond.LoadFriend> loadFriendList = new ArrayList<>();
-            while (rsSearch.next()) {
-                int idUseri = rsSearch.getInt(1);
-                String accountName = rsSearch.getString(2);
-                String hoTen = rsSearch.getString(3);
-                LoadFriendRespond.LoadFriend loadFriend = new LoadFriendRespond.LoadFriend(idUseri,accountName,hoTen);
+
+            SearchFriendListRespond searchFriendListRespond = new SearchFriendListRespond();
+            searchFriendListRespond.setAction(SEARCH_FRIEND_LIST_ACTION);
+
+            if (position == SEARCH_FRIEND_LIST_ACTION_MAIN_FRAME){
+                searchFriendListRespond.setPosition(SEARCH_FRIEND_LIST_ACTION_MAIN_FRAME);
+                System.out.println("main");
+            }
+            else {
+                searchFriendListRespond.setPosition(SEARCH_FRIEND_LIST_ACTION_CREATE_GROUP);
+                System.out.println("create");
+            }
+
+            List<SearchFriendListRespond.LoadFriend> loadFriendList = new ArrayList<>();
+            while (rsSearchFriend.next()) {
+                int idUseri = rsSearchFriend.getInt(1);
+                String accountName = rsSearchFriend.getString(2);
+                String hoTen = rsSearchFriend.getString(3);
+                SearchFriendListRespond.LoadFriend loadFriend = new SearchFriendListRespond.LoadFriend(idUseri,accountName,hoTen);
                 loadFriendList.add(loadFriend);
             }
-            loadFriendRespond.setLoadFriendsList(loadFriendList);
+            searchFriendListRespond.setLoadFriendsList(loadFriendList);
             System.out.println("Number of Friend list" + loadFriendList.size()  );
-            out.writeUTF(TcpServer.mapper.writeValueAsString(loadFriendRespond));
+            out.writeUTF(TcpServer.mapper.writeValueAsString(searchFriendListRespond));
             out.flush();
         }catch (Exception e){
             e.printStackTrace();

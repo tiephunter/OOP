@@ -44,16 +44,15 @@ public class GroupConversationFrame {
             }
             String sessionName = chatGroupRespond.getSessionName();
             frameConversation = new JFrame(sessionName);
-            frameConversation.setSize(400, 600);
+            frameConversation.setSize(420, 620);
             frameConversation.setLocationRelativeTo(frameConversation);
             frameConversation.setResizable(true);
             frameConversation.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            frameConversation.setBackground(Color.gray);
-            frameConversation.setForeground(Color.gray);
             //
             panelWhole = new JPanel();
             panelWhole.setLayout(new FlowLayout(FlowLayout.LEFT));
             panelWhole.setPreferredSize(new Dimension(450, 650));
+            panelWhole.setBorder(new EmptyBorder(0,30,0,0));
             panelWhole.setBackground(new java.awt.Color(205 ,201 ,165));
             //
             //panel Back button
@@ -64,7 +63,7 @@ public class GroupConversationFrame {
             //create panelConversation
             panelConversation = new JPanel();
             panelConversation.setLayout(new FlowLayout());
-            panelConversation.setBackground(new java.awt.Color(205 ,201 ,165));
+            panelConversation.setBackground(new java.awt.Color(255 ,255 ,240));
             //create JscrollpaneChat
             spChat = new JScrollPane(panelConversation, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
             spChat.setPreferredSize(new Dimension(380, 450));
@@ -76,6 +75,7 @@ public class GroupConversationFrame {
             //create button back to home
             Icon backIcon = new ImageIcon("D:\\OOP\\code\\ProjectMessage_CLIENT\\image\\backBtnSmall.png");
             backToHome = new JButton(backIcon);
+            backToHome.setBorderPainted(false);
             backToHome.setFocusPainted(false);
             backToHome.setBackground(new java.awt.Color(205 ,201 ,165));
             backToHome.addActionListener(new ActionListener() {
@@ -122,17 +122,6 @@ public class GroupConversationFrame {
                     panelText.add(lbMsg);
                     panelConversation.add(panelText);
                 } else {
-                    //
-//                    JPanel panelText = new JPanel();
-//                    panelText.setLayout(new FlowLayout(FlowLayout.LEFT));
-//                    panelText.setPreferredSize(new Dimension(380, 50));
-//                    panelText.setBackground(Color.gray);
-//                    JLabel lbMsg = new JLabel(textMsg);
-//                    lbMsg.setPreferredSize(new Dimension(200, 50));
-//                    lbMsg.setForeground(Color.blue);
-//                    panelText.add(lbMsg);
-//                    panelConversation.add(panelText);
-
                     //
                     JPanel panelText = new JPanel();
                     panelText.setLayout(new FlowLayout(FlowLayout.LEFT));
@@ -201,8 +190,6 @@ public class GroupConversationFrame {
                             msgBtn.setBackground(new java.awt.Color(139 ,137 ,112));
                             msgBtn.setForeground(Color.black);
                             msgBtn.setBorder(new RoundedBorder(20));
-
-//                    msgBtn.setHorizontalAlignment(JLabel.LEFT);
                             panelText.add(msgBtn);
                             panelConversation.add(panelText);
                             //
@@ -281,7 +268,7 @@ public class GroupConversationFrame {
             Rectangle viewBounds = spChat.getViewportBorderBounds();
             panelConversation.scrollRectToVisible(new Rectangle(0, height, viewBounds.width, viewBounds.height));
 //        int idMsg = sendMessgeGroupRespond.getIdMsg();
-//        int idSession = sendMessgeGroupRespond.getIdSession();
+//        int idSession = sendMessgeGroupRespond.getIdSession();x
 //        int idUser = sendMessgeGroupRespond.getIdUser();
 //        String tfInputMsg = sendMessgeGroupRespond.getTfInputMsg();
 //        groupConversationFrame.lbReceivedMessage = new JLabel(tfInputMsg, JLabel.LEFT);

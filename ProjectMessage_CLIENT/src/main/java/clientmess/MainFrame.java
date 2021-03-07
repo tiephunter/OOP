@@ -156,7 +156,8 @@ public class MainFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    SearchFriendListRequest searchFriendListRequest = new SearchFriendListRequest(AppMessenger.SEARCH_FRIEND_LIST_ACTION, AppMessenger.idUser, searchFriendTf.getText());
+                    SearchFriendListRequest searchFriendListRequest = new SearchFriendListRequest(AppMessenger.SEARCH_FRIEND_LIST_ACTION
+                            ,AppMessenger.SEARCH_FRIEND_LIST_ACTION_MAIN_FRAME, AppMessenger.idUser, searchFriendTf.getText());
                     ObjectMapper mapper = new ObjectMapper();
                     String json = mapper.writeValueAsString(searchFriendListRequest);
                     AppMessenger.out.writeUTF(json);
@@ -266,11 +267,11 @@ public class MainFrame {
 
     }
 
-    public void displaySearchFriendList(List<LoadFriendRespond.LoadFriend> loadSearchFriendList){
+    public void displaySearchFriendList(List<SearchFriendListRespond.LoadFriend> loadSearchFriendList){
         searchPanel.removeAll();
         int width = 400;
         int height = 0;
-        for (LoadFriendRespond.LoadFriend loadFriend : loadSearchFriendList) {
+        for (SearchFriendListRespond.LoadFriend loadFriend : loadSearchFriendList) {
             height += 55;
             JPanel userPanel = new JPanel();
             userPanel.setPreferredSize(new Dimension(400, 50));

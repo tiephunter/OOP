@@ -39,7 +39,7 @@ public class ConversationFrame {
             int idFriend = chatRespond.getIdFriend();
             String tenTaiKhoanFriend = chatRespond.getTenTaiKhoanFriend();
             frameConversation = new JFrame(tenTaiKhoanFriend);
-            frameConversation.setSize(430, 650);
+            frameConversation.setSize(420, 620);
             frameConversation.setLocationRelativeTo(frameConversation);
             frameConversation.setResizable(true);
             frameConversation.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -49,6 +49,7 @@ public class ConversationFrame {
             panelWhole = new JPanel();
             panelWhole.setLayout(new FlowLayout(FlowLayout.LEFT));
             panelWhole.setPreferredSize(new Dimension(430, 650));
+            panelWhole.setBorder(new EmptyBorder(0,30,0,0));
             panelWhole.setBackground(new java.awt.Color(205 ,201 ,165));
             //
             panelBackBtn = new JPanel();
@@ -94,7 +95,7 @@ public class ConversationFrame {
 //             int height = 0;
 //             int width = 380;
             for (int i = 0; i < amountMessage; i++) {
-                height += 55;
+//                height += 50;
                 ChatMessage chatMessage = listMessage.get(i);
                 int idMsg = chatMessage.getIdMsg();
                 String textMsg = chatMessage.getTextMsg();
@@ -103,6 +104,52 @@ public class ConversationFrame {
 //                JLabel userNamelable;
                 if (idUser == idSender) {
                     //create panel
+//                    String[] wordArray = textMsg.split(" ");
+//                    int wordPerLine = 5;
+//                    List<String> messageInRow = new ArrayList();
+//                    for (int b = 0; b < wordArray.length; b++) {
+//                        // Gộp hiện thị 5 words thành 1 cục
+//
+//                        messageInRow.add(wordArray[b]);
+//
+//                        if (messageInRow.size() >= 4 || b == wordArray.length - 1) {
+//
+//                            String messageToDisplay = "";
+//                            for (String s : messageInRow) {
+//                                messageToDisplay = messageToDisplay + s + " ";
+//                            }
+//
+//                            //create panel
+//                            JPanel panelText = new JPanel();
+//                            panelText.setLayout(new FlowLayout(FlowLayout.RIGHT));
+//                            panelText.setPreferredSize(new Dimension(380, 50));
+//                            panelText.setBorder(new EmptyBorder(0, 0, 0, 15));
+//                            panelText.setBackground(new java.awt.Color(255, 255 ,240));
+//
+//
+//                            JButton msgBtn = new JButton(messageToDisplay);
+//                            msgBtn.setPreferredSize(new Dimension(200, 30));
+//                            msgBtn.setFocusPainted(false);
+//                            //                    msgBtn.setEnabled(false);
+//                            msgBtn.setBackground(new java.awt.Color(139, 137, 112));
+//                            msgBtn.setForeground(Color.black);
+//                            msgBtn.setBorder(new RoundedBorder(20));
+//
+//                            //                    msgBtn.setHorizontalAlignment(JLabel.LEFT);
+//                            panelText.add(msgBtn);
+//
+//                            panelConversation.add(panelText);
+//
+//                            messageInRow = new ArrayList();
+//                            panelConversation.setPreferredSize(new Dimension(width, height += 5));
+//                            panelConversation.revalidate();
+//                            panelConversation.repaint();
+//                        }
+//                        panelConversation.setPreferredSize(new Dimension(width, height += 5));
+//                        panelConversation.revalidate();
+//                        panelConversation.repaint();
+//
+//                    }
                     JPanel panelText = new JPanel();
                     panelText.setLayout(new FlowLayout(FlowLayout.RIGHT));
                     panelText.setPreferredSize(new Dimension(380, 50));
@@ -122,8 +169,63 @@ public class ConversationFrame {
                     panelText.add(lbMsg);
 //                    panelText.add(userNamelable);
                     panelConversation.add(panelText);
+                    panelConversation.setPreferredSize(new Dimension(width, height += 55));
+                            panelConversation.revalidate();
+                            panelConversation.repaint();
                 } else {
                     //
+//                    JLabel userNamelb = new JLabel(userName+":");
+//                    userNamelb.setPreferredSize(new Dimension(380, 10));
+//
+//                    panelConversation.add(userNamelb);
+//                    String[] wordArray = textMsg.split(" ");
+//                    int wordPerLine = 5;
+//                    List<String> messageInRow = new ArrayList();
+//                    for (int b = 0; b < wordArray.length; b++) {
+//                        // Gộp hiện thị 5 words thành 1 cục
+//
+//                        messageInRow.add(wordArray[b]);
+//
+//                        if (messageInRow.size() >= 4 || b == wordArray.length - 1) {
+//
+//                            String messageToDisplay = "";
+//                            for (String s : messageInRow) {
+//                                messageToDisplay = messageToDisplay + s + " ";
+//                            }
+//
+//                            //create panel
+//                            JPanel panelText = new JPanel();
+//                            panelText.setLayout(new FlowLayout(FlowLayout.LEFT));
+//                            panelText.setPreferredSize(new Dimension(380, 50));
+//                            panelText.setBorder(new EmptyBorder(0, 0, 0, 15));
+//                            panelText.setBackground(new java.awt.Color(255, 255 ,240));
+//
+//
+//                            JButton msgBtn = new JButton(messageToDisplay);
+//                            msgBtn.setPreferredSize(new Dimension(200, 30));
+//                            msgBtn.setFocusPainted(false);
+//                            //                    msgBtn.setEnabled(false);
+//                            msgBtn.setBackground(new java.awt.Color(139, 137, 112));
+//                            msgBtn.setForeground(Color.black);
+//                            msgBtn.setBorder(new RoundedBorder(20));
+//
+//                            //                    msgBtn.setHorizontalAlignment(JLabel.LEFT);
+//                            panelText.add(msgBtn);
+//
+//                            panelConversation.add(panelText);
+//
+//                            messageInRow = new ArrayList();
+//                            panelConversation.setPreferredSize(new Dimension(width, height += 55));
+//                            panelConversation.revalidate();
+//                            panelConversation.repaint();
+//                        }
+//                        panelConversation.setPreferredSize(new Dimension(width, height += 5));
+//                        panelConversation.revalidate();
+//                        panelConversation.repaint();
+//
+//                    }
+
+
                     JPanel panelText = new JPanel();
                     panelText.setLayout(new FlowLayout(FlowLayout.LEFT));
                     panelText.setPreferredSize(new Dimension(380, 50));
@@ -131,7 +233,7 @@ public class ConversationFrame {
                     panelText.setBorder(new EmptyBorder(0, 0, 0, 0));
 //                    panelText.setForeground(Color.blue);
                     //
-                    JLabel userNamelb = new JLabel(userName+":");
+                      JLabel userNamelb = new JLabel(userName+":");
                     userNamelb.setPreferredSize(new Dimension(380,10));
                     JButton msgBtn = new JButton(textMsg);
                     msgBtn.setPreferredSize(new Dimension(200, 30));
@@ -150,6 +252,9 @@ public class ConversationFrame {
                     panelText.add(userNamelb);
                     panelText.add(msgBtn);
                     panelConversation.add(panelText);
+                    panelConversation.setPreferredSize(new Dimension(width, height += 55));
+                    panelConversation.revalidate();
+                    panelConversation.repaint();
                 }
             }
             panelConversation.setPreferredSize(new Dimension(width, height));
@@ -238,38 +343,68 @@ public class ConversationFrame {
         }
         return true;
     }
-
     public void displayOnlMessage(SendMessageRespond sendMessageRespond) {
         System.out.println("nhan dc message luc onl");
         int Message = sendMessageRespond.getUserState();
         if (Message == AppMessenger.RECEIVED_MESSENGER_NOW) {
-            //create panel
-            JPanel panelText = new JPanel();
-            panelText.setLayout(new FlowLayout(FlowLayout.LEFT));
-            panelText.setPreferredSize(new Dimension(380, 50));
-            panelText.setBorder(new EmptyBorder(0, 0, 0, 15));
-            panelText.setBackground(new java.awt.Color(255, 255 ,240));
             int idMsg = sendMessageRespond.getIdMsg();
             int idSession = sendMessageRespond.getIdSession();
             int idUser = sendMessageRespond.getIdUser();
             String messageTxt = sendMessageRespond.getTfInputMsg();
             String userName = sendMessageRespond.getUserName();
-            //creatte button to hold text
-            JLabel userNameLb = new JLabel(userName+":");
-            userNameLb.setPreferredSize(new Dimension(380,10));
-            JButton msgBtn = new JButton(messageTxt);
-            msgBtn.setPreferredSize(new Dimension(200, 30));
-            msgBtn.setFocusPainted(false);
-//                    msgBtn.setEnabled(false);
-            msgBtn.setBackground(new java.awt.Color(139, 137 ,112));
-            msgBtn.setForeground(Color.black);
-            msgBtn.setBorder(new RoundedBorder(20));
 
-//                    msgBtn.setHorizontalAlignment(JLabel.LEFT);
-            panelText.add(userNameLb);
-            panelText.add(msgBtn);
-            panelConversation.add(panelText);
-            panelConversation.setPreferredSize(new Dimension(width, height += 55));
+            //creatte button to hold text
+            JLabel userNameLb = new JLabel(userName + ":");
+            userNameLb.setPreferredSize(new Dimension(380, 10));
+
+            panelConversation.add(userNameLb);
+
+            String[] wordArray = messageTxt.split(" ");
+            int wordPerLine = 4;
+            List<String> messageInRow = new ArrayList();
+            for (int i = 0; i < wordArray.length; i++) {
+                // Gộp hiện thị 5 words thành 1 cục
+
+                messageInRow.add(wordArray[i]);
+
+                if (messageInRow.size() >= 4 || i == wordArray.length - 1) {
+
+                    String messageToDisplay = "";
+                    for (String s : messageInRow) {
+                        messageToDisplay = messageToDisplay + s + " ";
+                    }
+
+                    //create panel
+                    JPanel panelText = new JPanel();
+                    panelText.setLayout(new FlowLayout(FlowLayout.LEFT));
+                    panelText.setPreferredSize(new Dimension(380, 50));
+                    panelText.setBorder(new EmptyBorder(0, 0, 0, 15));
+                    panelText.setBackground(new java.awt.Color(255, 255 ,240));
+
+
+                    JButton msgBtn = new JButton(messageToDisplay);
+                    msgBtn.setPreferredSize(new Dimension(200, 30));
+                    msgBtn.setFocusPainted(false);
+                    //                    msgBtn.setEnabled(false);
+                    msgBtn.setBackground(new java.awt.Color(139, 137, 112));
+                    msgBtn.setForeground(Color.black);
+                    msgBtn.setBorder(new RoundedBorder(20));
+
+                    //                    msgBtn.setHorizontalAlignment(JLabel.LEFT);
+                    panelText.add(msgBtn);
+
+                    panelConversation.add(panelText);
+
+                    messageInRow = new ArrayList();
+                    panelConversation.setPreferredSize(new Dimension(width, height += 55));
+                    panelConversation.revalidate();
+                    panelConversation.repaint();
+                }
+
+            }
+
+
+            panelConversation.setPreferredSize(new Dimension(width, height += 15));
             panelConversation.revalidate();
             panelConversation.repaint();
 
@@ -286,31 +421,78 @@ public class ConversationFrame {
         }
     }
 
+//    public void displayOnlMessage(SendMessageRespond sendMessageRespond) {
+//        System.out.println("nhan dc message luc onl");
+//        int Message = sendMessageRespond.getUserState();
+//        if (Message == AppMessenger.RECEIVED_MESSENGER_NOW) {
+//            //create panel
+//            JPanel panelText = new JPanel();
+//            panelText.setLayout(new FlowLayout(FlowLayout.LEFT));
+//            panelText.setPreferredSize(new Dimension(380, 50));
+//            panelText.setBorder(new EmptyBorder(0, 0, 0, 15));
+//            panelText.setBackground(new java.awt.Color(255, 255 ,240));
+//            int idMsg = sendMessageRespond.getIdMsg();
+//            int idSession = sendMessageRespond.getIdSession();
+//            int idUser = sendMessageRespond.getIdUser();
+//            String messageTxt = sendMessageRespond.getTfInputMsg();
+//            String userName = sendMessageRespond.getUserName();
+//            //creatte button to hold text
+//            JLabel userNameLb = new JLabel(userName+":");
+//            userNameLb.setPreferredSize(new Dimension(380,10));
+//            JButton msgBtn = new JButton(messageTxt);
+//            msgBtn.setPreferredSize(new Dimension(200, 30));
+//            msgBtn.setFocusPainted(false);
+////                    msgBtn.setEnabled(false);
+//            msgBtn.setBackground(new java.awt.Color(139, 137 ,112));
+//            msgBtn.setForeground(Color.black);
+//            msgBtn.setBorder(new RoundedBorder(20));
+//
+////                    msgBtn.setHorizontalAlignment(JLabel.LEFT);
+//            panelText.add(userNameLb);
+//            panelText.add(msgBtn);
+//            panelConversation.add(panelText);
+//            panelConversation.setPreferredSize(new Dimension(width, height += 55));
+//            panelConversation.revalidate();
+//            panelConversation.repaint();
+//
+//            Rectangle viewBounds = spChat.getViewportBorderBounds();
+//            panelConversation.scrollRectToVisible(new Rectangle(0, height, viewBounds.width, viewBounds.height));
+//            //
+////            conversationFrame.lbReceivedMessage = new JLabel(tfInputMsg, JLabel.LEFT);
+////            conversationFrame.panelConversation.add(conversationFrame.lbReceivedMessage);
+////            conversationFrame.lbReceivedMessage.setAlignmentX(Component.LEFT_ALIGNMENT);
+////            conversationFrame.panelConversation.updateUI();
+//            System.out.println("Nhận được lúc onl");
+//        } else {
+//            System.out.println("Không nhan được tin nhắn");
+//        }
+//    }
+
     public static void main(String[] args) {
         ChatRespond chatRespond = new ChatRespond();
         chatRespond.setMessageList(new ArrayList<>());
         for (int i = 0; i < 10; i++) {
-            ChatMessage chatMessage = new ChatMessage(i, "dsadsa" +
-                    "dfgdfgfdg ", i,"sd");
+            ChatMessage chatMessage = new ChatMessage(i, "dsa df fd dsa" +
+                    "df gdf gf dg ", i,"sd");
             chatRespond.getMessageList().add(chatMessage);
         }
         ConversationFrame conversationFrame = new ConversationFrame(chatRespond);
 
         conversationFrame.displayOnlMessage(
-                new SendMessageRespond(1, AppMessenger.RECEIVED_MESSENGER_NOW, 1, 1, 1, "Ahaaaha" +
+                new SendMessageRespond(1, AppMessenger.RECEIVED_MESSENGER_NOW, 1, 1, 1, "Ahaaaha fbvd df fd fd fd fd fd" +
                         "fdga","Sd"));
 
 
         conversationFrame.displayOnlMessage(
-                new SendMessageRespond(1, AppMessenger.RECEIVED_MESSENGER_NOW, 1, 1, 1, "Ahaaahaa","sd"));
+                new SendMessageRespond(1, AppMessenger.RECEIVED_MESSENGER_NOW, 1, 1, 1, "Ahaa sd  sd  ds dsahaa","sd"));
 
 
         conversationFrame.displayOnlMessage(
-                new SendMessageRespond(1, AppMessenger.RECEIVED_MESSENGER_NOW, 1, 1, 1, "Ahaaahaa","sfs"));
+                new SendMessageRespond(1, AppMessenger.RECEIVED_MESSENGER_NOW, 1, 1, 1, "Ahaa sd ds ds ds ahaa","sfs"));
 
 
         conversationFrame.displayOnlMessage(
-                new SendMessageRespond(1, AppMessenger.RECEIVED_MESSENGER_NOW, 1, 1, 1, "Ahaaahaa","asd"));
+                new SendMessageRespond(1, AppMessenger.RECEIVED_MESSENGER_NOW, 1, 1, 1, "Ahaaa d s ds fs df haa 2 3 43 43533 343 43 43 43 3 9","asd"));
     }
     class RoundedBorder implements Border {
         int radius;

@@ -49,6 +49,8 @@ public class AppMessenger {
     final static int CHAT_ACTION_MAIN = 22;
     final static int LOAD_FRIEND_IN_MAIN_FRAME = 23;
     final static int SEARCH_FRIEND_LIST_ACTION = 24;
+    final static int SEARCH_FRIEND_LIST_ACTION_MAIN_FRAME = 25;
+    final static int SEARCH_FRIEND_LIST_ACTION_CREATE_GROUP = 26;
     final static int LOAD_FRIEND_LIST_ACTION_TO_CREATE_GROUP = 70;
 
 
@@ -128,8 +130,18 @@ public class AppMessenger {
     public static void handleLoadUserListAction(LoadUserRespond loadUserRespond) throws Exception {
         addFriendFrame.displayUserList(loadUserRespond.getLoadUserList());
     }
-    public static void handleSearchFriendListAction(LoadFriendRespond searchFriendRespond){
-        mainFrame.displaySearchFriendList(searchFriendRespond.getLoadFriendsList());
+    public static void handleSearchFriendListAction(SearchFriendListRespond searchFriendListRespond){
+        int position = searchFriendListRespond.getPosition();
+        if (position == SEARCH_FRIEND_LIST_ACTION_MAIN_FRAME){
+            mainFrame.displaySearchFriendList(searchFriendListRespond.getLoadFriendsList());
+        }
+        else if(position == SEARCH_FRIEND_LIST_ACTION_CREATE_GROUP){
+            createGroupFrame.displaySearchFriendList(searchFriendListRespond.getLoadFriendsList());
+        }
+        else {
+            JOptionPane.showMessageDialog(null,"Lỗi load friend");
+        }
+
     }
 
     public static void handleAddFriendAction(AddFriendRespond addFriendRespond) throws Exception {
@@ -149,7 +161,6 @@ public class AppMessenger {
 
     public static void handleCreateGroup(LoadFriendGroupRespond loadFriendGroupRespond) throws Exception {
         createGroupFrame.displayCreate(loadFriendGroupRespond);
-
 
     }
 
@@ -299,8 +310,8 @@ class ThreadHandleInput extends Thread {
                             break;
                         case AppMessenger.SEARCH_FRIEND_LIST_ACTION:
                             System.out.println("handle search Friend List");
-                            LoadFriendRespond searchFriendRespond = AppMessenger.mapper.readValue(json,LoadFriendRespond.class);
-                            AppMessenger.handleSearchFriendListAction(searchFriendRespond);
+                            SearchFriendListRespond searchFriendListRespond = AppMessenger.mapper.readValue(json,SearchFriendListRespond.class);
+                            AppMessenger.handleSearchFriendListAction(searchFriendListRespond);
                             break;
                         case AppMessenger.ADD_FRIEND_ACTION:
                             System.out.println("Handle Add friend Action");

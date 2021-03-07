@@ -141,8 +141,8 @@ public class GroupFrame {
     public void hide() {
         groupListFrame.setVisible(false);
     }
-
+//
 //    public static void main(String[] args) {
-//        GroupFrame f = new GroupFrame();
+//        GroupFrame f = new GroupFrame(sa);
 //    }
 }
